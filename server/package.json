@@ -1,0 +1,22 @@
+{
+  "name": "social-media",
+  "version": "1.0.0",
+  "description": "Social Media App Based On MERNG",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Acce_l",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server": "^2.21.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^15.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.19"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
