@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, Grid } from 'semantic-ui-react';
 import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client';
 
 import { useForm } from '../utils/hooks';
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
+import Editor from './Editor';
 
 function PostForm(props) {
   const [errors, setErrors] = useState({});
@@ -39,20 +40,29 @@ function PostForm(props) {
   return (
     <>
       <Form onSubmit={onSubmit}>
-        <h2>Create a post:</h2>
+        <h2>Create a Question</h2>
         <Form.Field>
-          <Form.Input
+          <label style={{fontSize:"1.125rem"}}>Title</label>
+          <input
             placeholder="Hi World!"
             name="body"
             onChange={onChange}
             value={values.body}
             error={errors.post === null ? true : false}
           />
+        </Form.Field>
+        <Form.Field>
+          <label style={{fontSize:"1.125rem"}}>Question</label>
+          <Editor />
+        </Form.Field>
+        <br />
+        <Form.Field>
           <Button type="submit" color="teal">
             Submit
           </Button>
         </Form.Field>
       </Form>
+
       {Object.keys(errors).length > 0 && (
         <div className="ui error message">
           <ul className="list">

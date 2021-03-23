@@ -7,17 +7,7 @@ import PostForm from '../components/PostForm';
 const CreatePost = (props) => {
   const { user } = useContext(AuthContext);
 
-  return (
-    <Grid columns={3}>
-      <Grid.Row>
-        {user && (
-          <Grid.Column>
-            <PostForm {...props}/>
-          </Grid.Column>
-        )}
-      </Grid.Row>
-    </Grid>
-  );
-}
+  return <div>{user && <PostForm {...props} />}</div>;
+};
 
 export default CreatePost;

@@ -10,18 +10,22 @@ import {
   Image,
   Icon,
   Label,
+  Divider,
 } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
 import LikeButton from '../components/LikeButton';
 import DeleteButton from '../components/DeleteButton';
 import MyPopup from '../utils/MyPopup';
+import CreateComment from '../components/comment/createComment';
+import Editor from '../components/Editor';
 
 function SinglePost(props) {
   const postId = props.match.params.postId;
+
   const { user } = useContext(AuthContext);
   const commentInputRef = useRef(null);
-
+  const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
 
   const { data: { getPost } = {} } = useQuery(FETCH_POST_QUERY, {
@@ -34,6 +38,7 @@ function SinglePost(props) {
     update() {
       setComment('');
       commentInputRef.current.blur();
+      setOpen(false);
     },
     variables: {
       postId,
@@ -62,31 +67,57 @@ function SinglePost(props) {
       likeCount,
       commentCount,
     } = getPost;
-
+    const commentChange = (e) => {
+      setComment(e.target.value);
+    };
     postMarkup = (
       <Grid>
-        <Grid.Row>
-          <Grid.Column width={2}>
-            <Image
-              src="https://picsum.photos/200"
-              size="small"
-              float="right"
-            />
-          </Grid.Column>
-          <Grid.Column width={10}>
-            <Card fluid>
+        <Grid.Column width={3}>
+          <Image
+            src="https://picsum.photos/200"
+            label={{
+              content: 'Community',
+              icon: 'users',
+              color: 'purple',
+              ribbon: true,
+            }}
+            centered
+          ></Image>
+        </Grid.Column>
+        <Grid.Column width={13}>
+          <Grid.Row>
+            <Card fluid color="blue" style={{ padding: '1rem' }}>
               <Card.Content>
-                <Card.Header>{username}</Card.Header>
+                <Card.Header>{body}</Card.Header>
                 <Card.Meta>{moment(createdAt).fromNow()}</Card.Meta>
-                <Card.Description>{body}</Card.Description>
-                <Card.Description>{body}</Card.Description>
+                <Card.Description
+                  style={{
+                    marginBottom: '20px',
+                    marginTop: '0px',
+                    color: '#999',
+                  }}
+                >
+                  {'By ' + username}
+                </Card.Description>
+                <Divider />
+                <Card.Description style={{ fontSize: '16px', color: '#000' }}>
+                  Velit occaecat dolor nulla ullamco velit duis dolore aliqua
+                  nisi. Sunt excepteur ullamco duis aliquip nostrud laborum
+                  minim est ut. Tempor nulla dolor elit proident.Consectetur
+                  aliqua id pariatur pariatur aliquip minim aliquip laborum
+                  labore do proident proident laborum nostrud. Cillum sit duis
+                  magna pariatur duis. Qui id consectetur amet culpa sunt ea
+                  nostrud ex sit quis velit sunt. Cillum fugiat nostrud qui elit
+                  ex cillum culpa.
+                </Card.Description>
               </Card.Content>
               <hr />
               <Card.Content extra>
                 <LikeButton user={user} post={{ id, likeCount, likes }} />
                 <MyPopup content="Comment on post">
                   <Button
-                   compact size="mini"
+                    compact
+                    size="mini"
                     as="div"
                     labelPosition="right"
                     onClick={() => console.log('Comment on post')}
@@ -102,49 +133,57 @@ function SinglePost(props) {
                 {user && user.username === username && (
                   <DeleteButton postId={id} callback={deletePostCallback} />
                 )}
+                <CreateComment
+                  submitComment={submitComment}
+                  comment={comment}
+                  user={user}
+                  commentChange={commentChange}
+                  commentInputRef={commentInputRef}
+                  open={open}
+                  setOpen={setOpen}
+                />
+              </Card.Content>
+              <Card.Content>
+                {comments.map((comment) => (
+                  <Card fluid key={comment.id}>
+                    <Card.Content style={{ padding: '4px 10px 4px 10px' }}>
+                      {user && user.username === comment.username && (
+                        <DeleteButton postId={id} commentId={comment.id} />
+                      )}
+                      <Card.Header
+                        style={{
+                          display: 'inline',
+                          marginRight: '5px',
+                          fontSize: '12px',
+                        }}
+                      >
+                        {comment.username}
+                      </Card.Header>
+                      <Card.Meta
+                        style={{ display: 'inline', fontSize: '12px' }}
+                      >
+                        {moment(comment.createdAt).fromNow()}
+                      </Card.Meta>
+                      <Card.Description style={{ fontSize: '14px' }}>
+                        {comment.body}
+                      </Card.Description>
+                    </Card.Content>
+                  </Card>
+                ))}
               </Card.Content>
             </Card>
-            {user && (
-              <Card fluid>
+          </Grid.Row>
+          <br />
+          <Grid.Row>
+            <Grid.Column>
+              <Card fluid color="yellow" style={{ padding: '10px' }}>
                 <Card.Content>
-                  <p>Post a comment</p>
-                  <Form>
-                    <div className="ui action input fluid">
-                      <input
-                        type="text"
-                        placeholder="Comment.."
-                        name="comment"
-                        value={comment}
-                        onChange={(event) => setComment(event.target.value)}
-                        ref={commentInputRef}
-                      />
-                      <button
-                        type="submit"
-                        className="ui button teal"
-                        disabled={comment.trim() === ''}
-                        onClick={submitComment}
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </Form>
+                  <Editor />
                 </Card.Content>
               </Card>
-            )}
-            {comments.map((comment) => (
-              <Card fluid key={comment.id}>
-                <Card.Content>
-                  {user && user.username === comment.username && (
-                    <DeleteButton postId={id} commentId={comment.id} />
-                  )}
-                  <Card.Header>{comment.username}</Card.Header>
-                  <Card.Meta>{moment(comment.createdAt).fromNow()}</Card.Meta>
-                  <Card.Description>{comment.body}</Card.Description>
-                </Card.Content>
-              </Card>
-            ))}
-          </Grid.Column>
-        </Grid.Row>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid.Column>
       </Grid>
     );
   }
@@ -152,7 +191,7 @@ function SinglePost(props) {
 }
 
 const SUBMIT_COMMENT_MUTATION = gql`
-  mutation($postId: ID!, $body: String!) {
+  mutation createComment($postId: ID!, $body: String!) {
     createComment(postId: $postId, body: $body) {
       id
       comments {

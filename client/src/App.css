@@ -14,3 +14,7 @@
 .ui.teal.buttons .button:focus {
   background-color: #00b5ad;
 }
+
+.ql-editor{
+  min-height:10rem;
+}

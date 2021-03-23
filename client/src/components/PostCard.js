@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Card, Icon, Label, Image, Item } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -15,16 +15,19 @@ function PostCard({
 
   return (
     <Item.Group divided style={{ border: '1px solid #ddd', padding: '25px' }}>
-      <Item as={Link} to={`/posts/${id}`}>
+      <Item>
         <Item.Image
+          key={new Date()}
           size="tiny"
-          src="https://picsum.photos/200"
+          src={'https://picsum.photos/200' + '?' + new Date()}
         />
 
         <Item.Content>
-          <Item.Header>{username}</Item.Header>
+          <Item.Header as={Link} to={`/posts/${id}`}>
+            {body}
+          </Item.Header>
           <Item.Meta>{moment(createdAt).fromNow(true) + ' ago'}</Item.Meta>
-          <Item.Description>{body}</Item.Description>
+          <Item.Description>{username}</Item.Description>
           <Item.Extra>
             <LikeButton user={user} post={{ id, likes, likeCount }} />
             <MyPopup content="Comment on post">
