@@ -61,20 +61,65 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async likePost(_, { postId }, context) {
+    async upvotePost(_, { postId }, context) {
       const { username } = checkAuth(context);
 
       const post = await Post.findById(postId);
       if (post) {
-        if (post.likes.find((like) => like.username === username)) {
+        if (post.upvotes.find((upvote) => upvote.username === username)) {
           // Post already likes, unlike it
-          post.likes = post.likes.filter((like) => like.username !== username);
+          post.upvotes = post.upvotes.filter(
+            (upvote) => upvote.username !== username
+          );
+          post.voteCount -= 1;
         } else {
-          // Not liked, like post
-          post.likes.push({
+          // Not liked
+          if (
+            post.downvotes.find((downvote) => downvote.username === username)
+          ) {
+            // Post disliked then remove downvote
+            post.downvotes = post.downvotes.filter(
+              (downvote) => downvote.username !== username
+            );
+          }
+          // upvote post
+          post.upvotes.push({
             username,
             createdAt: new Date().toISOString(),
           });
+          post.voteCount += 1;
+        }
+
+        await post.save();
+        return post;
+      } else throw new UserInputError('Post not found');
+    },
+
+    async downvotePost(_, { postId }, context) {
+      const { username } = checkAuth(context);
+
+      const post = await Post.findById(postId);
+      if (post) {
+        if (post.downvotes.find((downvote) => downvote.username === username)) {
+          // Post already disliked
+          post.downvotes = post.downvotes.filter(
+            (downvote) => downvote.username !== username
+          );
+          post.voteCount += 1;
+        } else {
+          // Post not disliked
+          if (post.upvotes.find((upvote) => upvote.username === username)) {
+            // Post liked then remove upvote
+            post.upvotes = post.upvotes.filter(
+              (upvote) => upvote.username !== username
+            );
+          }
+          // downvote post
+          post.downvotes.push({
+            username,
+            createdAt: new Date().toISOString(),
+          });
+          post.voteCount -= 1;
         }
 
         await post.save();

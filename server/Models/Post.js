@@ -11,12 +11,22 @@ const postSchema = new Schema({
       createdAt: String,
     },
   ],
-  likes: [
+  upvotes: [
     {
       username: String,
       createdAt: String,
     },
   ],
+  downvotes: [
+    {
+      username: String,
+      createdAt: String,
+    },
+  ],
+  voteCount: {
+    type:Number,
+    default:0
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "users",

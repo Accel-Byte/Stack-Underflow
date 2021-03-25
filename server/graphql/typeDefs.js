@@ -7,8 +7,9 @@ module.exports = gql`
     username: String!
     createdAt: String!
     comments: [Comment]!
-    likes: [Like]!
-    likeCount: Int!
+    upvotes: [Vote]!
+    downvotes: [Vote]!
+    voteCount: Int!
     commentCount: Int!
   }
   type Comment{
@@ -17,7 +18,7 @@ module.exports = gql`
     createdAt: String!
     body: String!
   }
-  type Like{
+  type Vote{
     id: ID!
     username: String!
     createdAt: String!
@@ -46,7 +47,8 @@ module.exports = gql`
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
-    likePost(postId: ID!): Post!
+    upvotePost(postId: ID!): Post!
+    downvotePost(postId: ID!): Post!
   }
   type Subscription {
     newPost: Post!
