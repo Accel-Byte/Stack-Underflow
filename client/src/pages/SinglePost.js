@@ -14,7 +14,8 @@ import {
 } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
-import LikeButton from '../components/LikeButton';
+import VoteButton from '../components/Button/LikeButton';
+import DisLikeButton from '../components/Button/DisLikeButton';
 import DeleteButton from '../components/DeleteButton';
 import MyPopup from '../utils/MyPopup';
 import CreateComment from '../components/comment/createComment';
@@ -63,8 +64,9 @@ function SinglePost(props) {
       createdAt,
       username,
       comments,
-      likes,
-      likeCount,
+      voteCount,
+      upvotes,
+      downvotes,
       commentCount,
     } = getPost;
     const commentChange = (e) => {
@@ -84,7 +86,13 @@ function SinglePost(props) {
             centered
           ></Image>
         </Grid.Column>
-        <Grid.Column width={13}>
+        <Grid.Column width={1} style={{paddingTop:"1rem"}}>
+          <VoteButton
+            user={user}
+            post={{ id, voteCount, upvotes, downvotes }}
+          />
+        </Grid.Column>
+        <Grid.Column width={12} style={{paddingLeft:"0"}}>
           <Grid.Row>
             <Card fluid color="blue" style={{ padding: '1rem' }}>
               <Card.Content>
@@ -113,8 +121,7 @@ function SinglePost(props) {
               </Card.Content>
               <hr />
               <Card.Content extra>
-                <LikeButton user={user} post={{ id, likeCount, likes }} />
-                <MyPopup content="Comment on post">
+               <MyPopup content="Comment on post">
                   <Button
                     compact
                     size="mini"
@@ -212,8 +219,11 @@ const FETCH_POST_QUERY = gql`
       body
       createdAt
       username
-      likeCount
-      likes {
+      voteCount
+      upvotes {
+        username
+      }
+      downvotes {
         username
       }
       commentCount

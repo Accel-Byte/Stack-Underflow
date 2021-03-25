@@ -7,8 +7,11 @@ export const FETCH_POSTS_QUERY = gql`
       body
       createdAt
       username
-      likeCount
-      likes {
+      voteCount
+      upvotes {
+        username
+      }
+      downvotes {
         username
       }
       commentCount

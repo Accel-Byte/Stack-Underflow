@@ -4,22 +4,20 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import { AuthContext } from '../context/auth';
-import LikeButton from './LikeButton';
 import DeleteButton from './DeleteButton';
 import MyPopup from '../utils/MyPopup';
 
 function PostCard({
-  post: { body, createdAt, id, username, likeCount, commentCount, likes },
+  post: { body, createdAt, id, username, commentCount },
 }) {
   const { user } = useContext(AuthContext);
-
   return (
     <Item.Group divided style={{ border: '1px solid #ddd', padding: '25px' }}>
       <Item>
         <Item.Image
           key={new Date()}
           size="tiny"
-          src={'https://picsum.photos/200' + '?' + new Date()}
+          src={'https://picsum.photos/200'}
         />
 
         <Item.Content>
@@ -29,7 +27,6 @@ function PostCard({
           <Item.Meta>{moment(createdAt).fromNow(true) + ' ago'}</Item.Meta>
           <Item.Description>{username}</Item.Description>
           <Item.Extra>
-            <LikeButton user={user} post={{ id, likes, likeCount }} />
             <MyPopup content="Comment on post">
               <Button
                 size="mini"

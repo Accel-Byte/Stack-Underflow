@@ -4,23 +4,23 @@ import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import { Button, Label, Icon } from 'semantic-ui-react';
 
-import MyPopup from '../utils/MyPopup';
+import MyPopup from '../../utils/MyPopup';
 
-function LikeButton({ user, post: { id, likeCount, likes } }) {
-  const [liked, setLiked] = useState(false);
-
+function DisLikeButton({ user, post: { id, dislikeCount, dislikes } }) {
+  const [disliked, setDisLiked] = useState(false);
+console.log(dislikeCount);
   useEffect(() => {
-    if (user && likes.find((like) => like.username === user.username)) {
-      setLiked(true);
-    } else setLiked(false);
-  }, [user, likes]);
+    if (user && dislikes.find((dislike) => dislike.username === user.username)) {
+      setDisLiked(true);
+    } else setDisLiked(false);
+  }, [user, dislikes]);
 
-  const [likePost] = useMutation(LIKE_POST_MUTATION, {
+  const [dislikePost] = useMutation(DISLIKE_POST_MUTATION, {
     variables: { postId: id },
   });
 
-  const likeButton = user ? (
-    liked ? (
+  const dislikeButton = user ? (
+    disliked ? (
       <Button size="mini" color="teal" compact>
         <Icon name="heart" />
       </Button>
@@ -41,27 +41,27 @@ function LikeButton({ user, post: { id, likeCount, likes } }) {
       compact
       as="div"
       labelPosition="right"
-      onClick={likePost}
+      onClick={dislikePost}
     >
-      <MyPopup content={liked ? 'Unlike' : 'Like'}>{likeButton}</MyPopup>
+      <MyPopup content={disliked ? 'Remove Dislike' : 'DisLike'}>{dislikeButton}</MyPopup>
       <Label basic color="teal" pointing="left">
-        {likeCount}
+        {dislikeCount}
       </Label>
     </Button>
   );
 }
 
-const LIKE_POST_MUTATION = gql`
-  mutation likePost($postId: ID!) {
-    likePost(postId: $postId) {
+const DISLIKE_POST_MUTATION = gql`
+  mutation dislikePost($postId: ID!) {
+    dislikePost(postId: $postId) {
       id
-      likes {
+      dislikes {
         id
         username
       }
-      likeCount
+      dislikeCount
     }
   }
 `;
 
-export default LikeButton;
+export default DisLikeButton;
