@@ -1,27 +1,41 @@
-const gql = require("graphql-tag");
+const gql = require('graphql-tag');
 
 module.exports = gql`
-  type Post {
+  type Comment {
     id: ID!
-    body: String!
     username: String!
     createdAt: String!
+    body: String!
+  }
+  type Vote {
+    id: ID!
+    username: String!
+    createdAt: String!
+  }
+  type Question {
+    title: String!
+    username: String!
+    body: String!
     comments: [Comment]!
     upvotes: [Vote]!
     downvotes: [Vote]!
     voteCount: Int!
     commentCount: Int!
   }
-  type Comment{
+  type Answer {
     id: ID!
-    username: String!
-    createdAt: String!
     body: String!
-  }
-  type Vote{
-    id: ID!
     username: String!
+    upvotes: [Vote]!
+    downvotes: [Vote]!
+    voteCount: Int!
     createdAt: String!
+  }
+  type Post {
+    id: ID!
+    createdAt: String!
+    question: Question!
+    answers: [Answer]!
   }
   type User {
     id: ID!
@@ -43,12 +57,16 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
-    createPost(body: String!): Post!
+    createPost(title: String!, body: String!): Post!
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
+    createAnswer(postId: ID!, body: String!): Post!
+    deleteAnswer(postId: ID!, answerId: ID!): Post!
     upvotePost(postId: ID!): Post!
     downvotePost(postId: ID!): Post!
+    upvoteAnswer(postId: ID!, answerId: ID!): Post!
+    downvoteAnswer(postId: ID!, answerId: ID!): Post!
   }
   type Subscription {
     newPost: Post!
