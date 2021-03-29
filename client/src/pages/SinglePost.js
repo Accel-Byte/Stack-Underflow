@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/client';
 import { Card, Grid, Image, Divider } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
-import VoteButton from '../components/Button/LikeButton';
+import VoteButton from '../components/Button/voteButton';
 import Editor from '../components/Editor';
 import Answer from '../components/Answer';
 import Question from '../components/Question';
@@ -25,7 +25,11 @@ function SinglePost(props) {
   } else {
     const { id } = getPost;
     const question = getPost.question;
-    const answers = getPost.answers;
+    let answers = getPost.answers;
+
+    answers = answers
+      .slice()
+      .sort((a, b) => (b.voteCount > a.voteCount ? 1 : -1));
 
     function deletePostCallback() {
       props.history.push('/');
