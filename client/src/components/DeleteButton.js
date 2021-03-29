@@ -44,8 +44,8 @@ function DeleteButton({ postId, commentId, callback }) {
     <>
       <MyPopup content={commentId ? 'Delete comment' : 'Delete post'}>
         <Button
-        size="mini"
-        compact
+          size="mini"
+          compact
           as="div"
           color="red"
           floated="right"
@@ -74,13 +74,28 @@ const DELETE_COMMENT_MUTATION = gql`
   mutation deleteComment($postId: ID!, $commentId: ID!) {
     deleteComment(postId: $postId, commentId: $commentId) {
       id
-      comments {
-        id
+      createdAt
+      question {
         username
-        createdAt
         body
+        title
+        upvotes {
+          username
+        }
+        downvotes {
+          username
+        }
+        voteCount
+        comments {
+          body
+          username
+        }
       }
-      commentCount
+      answers {
+        id
+        body
+        createdAt
+      }
     }
   }
 `;
