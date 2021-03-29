@@ -16,7 +16,7 @@ module.exports = {
 
       const post = await Post.findById(postId);
       if (post) {
-        post.comments.unshift({
+        post.question.comments.unshift({
           body,
           username,
           createdAt: new Date().toISOString(),
@@ -31,10 +31,10 @@ module.exports = {
       const post = await Post.findById(postId);
 
       if (post) {
-        const commentIndex = post.comments.findIndex((c) => c.id === commentId);
+        const commentIndex = post.question.comments.findIndex((c) => c.id === commentId);
 
-        if (post.comments[commentIndex].username === username) {
-          post.comments.splice(commentIndex, 1);
+        if (post.question.comments[commentIndex].username === username) {
+          post.question.comments.splice(commentIndex, 1);
           await post.save();
           return post;
         } else {
