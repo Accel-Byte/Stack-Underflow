@@ -18,3 +18,9 @@
 .ql-editor{
   min-height:10rem;
 }
+
+.ql-snow .ql-editor pre.ql-syntax {
+  background-color: #eee !important;
+  color: #000 !important;
+  overflow: visible;
+}
