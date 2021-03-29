@@ -1,25 +1,15 @@
-import { gql } from "@apollo/client";
+import { gql } from '@apollo/client';
 
 export const FETCH_POSTS_QUERY = gql`
   {
     getPosts {
       id
-      body
       createdAt
-      username
-      voteCount
-      upvotes {
+      question {
         username
-      }
-      downvotes {
-        username
-      }
-      commentCount
-      comments {
-        id
-        username
-        createdAt
         body
+        title
+        commentCount
       }
     }
   }
