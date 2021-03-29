@@ -1,36 +1,62 @@
-const { model, Schema } = require("mongoose");
+const { model, Schema } = require('mongoose');
 
 const postSchema = new Schema({
-  body: String,
-  username: String,
   createdAt: String,
-  comments: [
-    {
-      body: String,
-      username: String,
-      createdAt: String,
+  question: {
+    body: String,
+    title: String,
+    username: String,
+    comments: [
+      {
+        body: String,
+        username: String,
+        createdAt: String,
+      },
+    ],
+    upvotes: [
+      {
+        username: String,
+        createdAt: String,
+      },
+    ],
+    downvotes: [
+      {
+        username: String,
+        createdAt: String,
+      },
+    ],
+    voteCount: {
+      type: Number,
+      default: 0,
     },
-  ],
-  upvotes: [
-    {
-      username: String,
-      createdAt: String,
-    },
-  ],
-  downvotes: [
-    {
-      username: String,
-      createdAt: String,
-    },
-  ],
-  voteCount: {
-    type:Number,
-    default:0
   },
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users",
+    ref: 'users',
   },
+  answers: [
+    {
+      body: String,
+      username: String,
+      upvotes: [
+        {
+          username: String,
+          createdAt: String,
+        },
+      ],
+      downvotes: [
+        {
+          username: String,
+          createdAt: String,
+        },
+      ],
+      voteCount: {
+        type: Number,
+        default: 0,
+      },
+      createdAt: String,
+    },
+  ],
 });
 
-module.exports = model("Post", postSchema);
+module.exports = model('Post', postSchema);
