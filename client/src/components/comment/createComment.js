@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Modal, Card, Form, Icon } from 'semantic-ui-react';
+import React from 'react';
+import { Modal, Card, Form } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 const CreateComment = ({
