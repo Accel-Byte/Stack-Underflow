@@ -36,6 +36,7 @@ module.exports = gql`
     createdAt: String!
     question: Question!
     answers: [Answer]!
+    user: ID!
   }
   type User {
     id: ID!
@@ -53,6 +54,8 @@ module.exports = gql`
   type Query {
     getPosts: [Post]
     getPost(postId: ID!): Post
+    getUser(userId: ID!): User
+    getUserPost(userId: ID!): [Post]
   }
   type Mutation {
     register(registerInput: RegisterInput): User!
