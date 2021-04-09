@@ -25,6 +25,18 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async getUserPost(_, { userId }) {
+      try {
+        const posts = await Post.find({user: userId});
+        if (posts) {
+          return posts;
+        } else {
+          throw new Error('Post not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     async createPost(_, { title, body }, context) {

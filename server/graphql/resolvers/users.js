@@ -1,13 +1,13 @@
-const User = require("../../Models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { UserInputError } = require("apollo-server");
+const User = require('../../Models/User');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { UserInputError } = require('apollo-server');
 
 const {
   validateRegisterInput,
   validateLoginInput,
-} = require("../../utils/validator");
-const { SECRET_KEY } = require("../../config");
+} = require('../../utils/validator');
+const { SECRET_KEY } = require('../../config');
 
 function generateToken(user) {
   return jwt.sign(
@@ -17,29 +17,43 @@ function generateToken(user) {
       username: user.username,
     },
     SECRET_KEY,
-    { expiresIn: "1d" }
+    { expiresIn: '1d' }
   );
 }
 
 module.exports = {
+  Query: {
+    async getUser(_, { userId }) {
+      try {
+        const user = await User.findById(userId);
+        if (user) {
+          return user;
+        } else {
+          throw new Error('User not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+  },
   Mutation: {
     async login(_, { username, password }) {
       const { errors, valid } = validateLoginInput(username, password);
 
       if (!valid) {
-        throw new UserInputError("Errors", { errors });
+        throw new UserInputError('Errors', { errors });
       }
       const user = await User.findOne({ username });
 
       if (!user) {
-        errors.general = "User not found";
-        throw new UserInputError("User not found", { errors });
+        errors.general = 'User not found';
+        throw new UserInputError('User not found', { errors });
       }
 
       const match = await bcrypt.compare(password, user.password);
       if (!match) {
-        errors.general = "Wrong crendetials";
-        throw new UserInputError("Wrong crendetials", { errors });
+        errors.general = 'Wrong crendetials';
+        throw new UserInputError('Wrong crendetials', { errors });
       }
 
       const token = generateToken(user);
@@ -64,7 +78,7 @@ module.exports = {
         confirmPassword
       );
       if (!valid) {
-        throw new UserInputError("Errors", {
+        throw new UserInputError('Errors', {
           errors,
         });
       }
@@ -72,9 +86,9 @@ module.exports = {
       // TODO: Make Sure User Doesn't Exist
       const user = await User.findOne({ username });
       if (user) {
-        throw new UserInputError("Username Taken", {
+        throw new UserInputError('Username Taken', {
           errors: {
-            username: "This username is taken",
+            username: 'This username is taken',
           },
         });
       }
