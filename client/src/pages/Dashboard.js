@@ -14,6 +14,7 @@ import DashboardCard from '../components/PostCard/DashboardCard';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
+  
   const {
     loading,
     data: { getUser: user, getUserPost: posts } = {},
@@ -22,7 +23,12 @@ const Dashboard = (props) => {
       userId,
     },
   });
-
+  let votes = 0;
+  if (!loading) {
+    posts.forEach((post) => {
+      votes += post.question.voteCount;
+    });
+  }
   return (
     <Grid>
       <Grid.Column width={3}>
@@ -41,7 +47,9 @@ const Dashboard = (props) => {
             />
             <Card.Content>
               <Card.Header>{user ? user.username : ''}</Card.Header>
-              <Card.Meta>Joined in {moment(user ? user.createdAt : '').year()}</Card.Meta>
+              <Card.Meta>
+                Joined in {moment(user ? user.createdAt : '').year()}
+              </Card.Meta>
               <Card.Description>
                 Daniel is a comedian living in Nashville.
               </Card.Description>
@@ -56,50 +64,50 @@ const Dashboard = (props) => {
         </Grid.Row>
       </Grid.Column>
       <Grid.Column width={13}>
-        <Divider />
         <Grid.Row>
-          <Grid>
-            <Grid.Row className="page-title">
-              <h1>All Posts</h1>
-            </Grid.Row>
-            {loading ? (
-              <h1>Loading posts..</h1>
-            ) : (
-              <Transition.Group>
-                {posts &&
-                  posts.map((post) => (
-                    <Grid.Row
-                      key={post.id}
-                      style={{ marginBottom: 20, padding: '0px 10rem' }}
-                    >
-                      <DashboardCard post={post} />
-                    </Grid.Row>
-                  ))}
-              </Transition.Group>
-            )}
+          <Grid padded columns="equal" divided>
+            <Grid.Column>
+              <Grid.Row>
+                <h2>Questions</h2>
+              </Grid.Row>
+              <Grid.Row>
+                <h2>{posts ? posts.length : ''}</h2>
+              </Grid.Row>
+            </Grid.Column>
+            <Grid.Column>
+              <Grid.Row>
+                <h2>Votes</h2>
+              </Grid.Row>
+              <Grid.Row>
+                <h2>{votes}</h2>
+              </Grid.Row>
+            </Grid.Column>
           </Grid>
         </Grid.Row>
+        <Grid.Row>
+          <Divider />
+        </Grid.Row>
+        <Grid.Row className="page-title">
+          <h1>All Posts</h1>
+        </Grid.Row>
+        <Grid.Row>
+          {loading ? (
+            <h1>Loading posts..</h1>
+          ) : (
+            <Transition.Group>
+              {posts &&
+                posts.map((post) => (
+                  <Grid.Row
+                    key={post.id}
+                    style={{ marginBottom: 20, padding: '0px 10rem' }}
+                  >
+                    <DashboardCard post={post} />
+                  </Grid.Row>
+                ))}
+            </Transition.Group>
+          )}
+        </Grid.Row>
       </Grid.Column>
-      {/* <Grid columns={3}>
-      <Grid.Row className="page-title">
-        <h1>All Posts</h1>
-      </Grid.Row>
-      {loading ? (
-        <h1>Loading posts..</h1>
-      ) : (
-        <Transition.Group>
-          {posts &&
-            posts.map((post) => (
-              <Grid.Row
-                key={post.id}
-                style={{ marginBottom: 20, padding: '0px 10rem' }}
-              >
-                <PostCard post={post} />
-              </Grid.Row>
-            ))}
-        </Transition.Group>
-      )}
-    </Grid> */}
     </Grid>
   );
 };
@@ -121,6 +129,7 @@ const FETCH_DASHBOARD_DATA = gql`
         username
         body
         title
+        voteCount
       }
     }
   }
