@@ -25,7 +25,7 @@ const NavBar = () => {
               active={activeItem === 'Dashboard'}
               onClick={handleItemClick}
               as={Link}
-              to="/dashboard"
+              to={"/dashboard/" + user.id}
             />
             <Menu.Item color={'red'} name="logout" onClick={logout} />
           </Menu.Menu>
