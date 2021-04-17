@@ -20,7 +20,7 @@ function App() {
     <AuthProvider>
       <Router>
         <NavBar />
-        <Container>
+        <Container style={{paddingTop: "2rem"}}>
           <Route exact path="/" component={Home} />
           <AuthRoute exact path="/login" component={Login} />
           <AuthRoute exact path="/register" component={Register} />

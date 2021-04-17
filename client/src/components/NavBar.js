@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Menu, Segment } from 'semantic-ui-react';
+import { Menu, Segment, Sticky } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../context/auth';
@@ -16,7 +16,7 @@ const NavBar = () => {
   const navBar = (
     <Segment inverted style={{ borderRadius: 0 }}>
       {user ? (
-        <Menu inverted size="massive">
+        <Menu borderless={true}  fixed="top"  inverted size="large" style={{padding:"0.5rem"}}>
           <Menu.Item name={'StackUnderflow'} onClick={handleItemClick} as={Link} to="/" />
           <Menu.Menu position="right">
             <Menu.Item
@@ -31,7 +31,7 @@ const NavBar = () => {
           </Menu.Menu>
         </Menu>
       ) : (
-        <Menu inverted size="massive">
+        <Menu borderless={true}  fixed="top"  inverted size="large" style={{padding:"0.5rem"}} >
           <Menu.Item name={'StackUnderflow'} onClick={handleItemClick} as={Link} to="/" />
           <Menu.Menu position="right">
             <Menu.Item
