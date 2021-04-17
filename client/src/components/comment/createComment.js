@@ -1,6 +1,5 @@
 import React from 'react';
-import { Modal, Card, Form } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Modal, Card, Form, Button } from 'semantic-ui-react';
 
 const CreateComment = ({
   submitComment,
@@ -11,15 +10,16 @@ const CreateComment = ({
   open,
   setOpen,
 }) => {
+  
   return (
     <Modal
       closeIcon
       open={open}
       trigger={
         user && (
-          <Link style={{ color: 'blue', marginLeft: '5px' }}>
+          <Button style={{background:'transparent', padding: '0 1rem', color:'blue'}}>
             Create Comment
-          </Link>
+            </Button>
         )
       }
       onClose={() => setOpen(false)}
