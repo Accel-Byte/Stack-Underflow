@@ -5,6 +5,9 @@ const userSchema = new Schema({
   password: String,
   email: String,
   createdAt: String,
+  fileId: {
+    type: Schema.Types.ObjectId,
+  },
 });
 
 module.exports = model('User', userSchema);
