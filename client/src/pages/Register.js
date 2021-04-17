@@ -1,40 +1,43 @@
-import React, { useContext, useState } from "react";
-import { Button, Form } from "semantic-ui-react";
-import { useMutation } from "@apollo/client";
-import { gql } from "@apollo/client";
+import React, { useContext, useState } from 'react';
+import { Button, Form } from 'semantic-ui-react';
+import { useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
 
-import { AuthContext } from "../context/auth";
-import { useForm } from "../utils/hooks";
+import { AuthContext } from '../context/auth';
+import { useForm } from '../utils/hooks';
 
 function Register(props) {
   const context = useContext(AuthContext);
   const [errors, setErrors] = useState({});
 
   const { onChange, onSubmit, values } = useForm(registerUser, {
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    file: null,
   });
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       context.login(userData);
-      props.history.push("/");
+      props.history.push('/');
     },
     onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      console.log(err);
+      // setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
 
   function registerUser() {
+    console.log(values.file);
     addUser();
   }
 
   return (
     <div className="form-container">
-      <Form onSubmit={onSubmit} noValidate className={loading ? "loading" : ""}>
+      <Form onSubmit={onSubmit} noValidate className={loading ? 'loading' : ''}>
         <h1>Register</h1>
         <Form.Input
           label="Username"
@@ -72,6 +75,7 @@ function Register(props) {
           error={errors.confirmPassword ? true : false}
           onChange={onChange}
         />
+        <Form.Input name="file" type="file" onChange={onChange} data-max-size="500000"  accept="image/*" />
         <Button type="submit" primary>
           Register
         </Button>
@@ -89,12 +93,14 @@ function Register(props) {
   );
 }
 
+
 const REGISTER_USER = gql`
   mutation register(
     $username: String!
     $email: String!
     $password: String!
     $confirmPassword: String!
+    $file: Upload!
   ) {
     register(
       registerInput: {
@@ -102,6 +108,7 @@ const REGISTER_USER = gql`
         email: $email
         password: $password
         confirmPassword: $confirmPassword
+        file: $file
       }
     ) {
       id

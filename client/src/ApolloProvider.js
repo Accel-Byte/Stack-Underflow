@@ -1,10 +1,11 @@
 import React from "react";
 import App from "./App";
-import { ApolloClient, ApolloProvider, InMemoryCache, createHttpLink } from "@apollo/client";
+import { ApolloClient, ApolloProvider, InMemoryCache} from "@apollo/client";
+import { createUploadLink } from 'apollo-upload-client'
 import { setContext } from 'apollo-link-context';
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:5000'
+const httpLink = createUploadLink({
+  uri: 'http://localhost:5000/graphql'
 });
 
 const authLink = setContext(() => {

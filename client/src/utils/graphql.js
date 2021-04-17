@@ -11,6 +11,7 @@ export const FETCH_POSTS_QUERY = gql`
         title
         commentCount
       }
+      user
     }
   }
 `;

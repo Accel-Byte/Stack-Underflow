@@ -14,7 +14,7 @@ import DashboardCard from '../components/PostCard/DashboardCard';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
-  
+
   const {
     loading,
     data: { getUser: user, getUserPost: posts } = {},
@@ -23,6 +23,14 @@ const Dashboard = (props) => {
       userId,
     },
   });
+
+  const { data: { getImage: image } = {} } = useQuery(FETCH_IMAGE_QUERY, {
+    skip: !user,
+    variables: {
+      fileId: user && user.fileId,
+    },
+  });
+
   let votes = 0;
   if (!loading) {
     posts.forEach((post) => {
@@ -35,7 +43,7 @@ const Dashboard = (props) => {
         <Grid.Row>
           <Card>
             <Image
-              src="https://picsum.photos/200"
+             src={image && 'data:image/jpeg;base64,' + image}
               label={{
                 content: 'Community',
                 icon: 'users',
@@ -120,6 +128,7 @@ const FETCH_DASHBOARD_DATA = gql`
       username
       email
       createdAt
+      fileId
     }
     getUserPost(userId: $userId) {
       id
@@ -132,5 +141,11 @@ const FETCH_DASHBOARD_DATA = gql`
         voteCount
       }
     }
+  }
+`;
+
+const FETCH_IMAGE_QUERY = gql`
+  query($fileId: ID!){
+    getImage(fileId: $fileId)
   }
 `;

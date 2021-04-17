@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import { Card, Grid, Image, Divider } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
@@ -12,13 +11,24 @@ import Question from '../components/Question';
 function SinglePost(props) {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-
   const { data: { getPost } = {} } = useQuery(FETCH_POST_QUERY, {
     variables: {
       postId,
     },
   });
-
+  const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
+    skip: !getPost,
+    variables: {
+       userId: getPost && getPost.user,
+    },
+  });
+  const { data: { getImage: image } = {} } = useQuery(FETCH_IMAGE_QUERY, {
+    skip: !getUser,
+    variables: {
+      fileId: getUser && getUser.fileId,
+    },
+  });
+  
   let postMarkup;
   if (!getPost) {
     postMarkup = <p>Loading post..</p>;
@@ -38,7 +48,7 @@ function SinglePost(props) {
       <Grid>
         <Grid.Column width={3}>
           <Image
-            src="https://picsum.photos/200"
+            src={image && 'data:image/jpeg;base64,' + image}
             label={{
               content: 'Community',
               icon: 'users',
@@ -150,6 +160,21 @@ const FETCH_POST_QUERY = gql`
         voteCount
         username
       }
+      user
+    }
+    
+  }
+`;
+const FETCH_IMAGE_QUERY = gql`
+  query($fileId: ID!){
+    getImage(fileId: $fileId)
+  }
+`;
+const FETCH_USER_QUERY = gql`
+  query($userId: ID!){
+    getUser(userId: $userId){
+      fileId,
+      username
     }
   }
 `;

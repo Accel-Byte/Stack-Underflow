@@ -50,6 +50,7 @@ function AuthProvider(props) {
   }
 
   function logout() {
+    window.location = "/";
     localStorage.removeItem('jwtToken');
     dispatch({ type: 'LOGOUT' });
   }
