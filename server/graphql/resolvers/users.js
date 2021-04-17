@@ -1,7 +1,12 @@
 const User = require('../../Models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { UserInputError } = require('apollo-server');
+const { UserInputError, RenameRootFields } = require('apollo-server');
+const Grid = require('gridfs-stream');
+const mongoose = require('mongoose');
+const { GraphQLUpload } = require('graphql-upload');
+const ObjectID = require('mongodb').ObjectID;
+const fs = require('fs');
 
 const {
   validateRegisterInput,
@@ -15,14 +20,80 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       username: user.username,
+      fileId: user.fileId
     },
     SECRET_KEY,
     { expiresIn: '1d' }
   );
 }
+const storeFile = async (upload) => {
+  const { filename, mimetype, encoding, createReadStream } = await upload.file;
+
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: 'files',
+  });
+
+  const uploadStream = bucket.openUploadStream(filename, {
+    contentType: mimetype,
+  });
+  return new Promise((resolve, reject) => {
+    createReadStream()
+      .pipe(uploadStream)
+      .on('error', reject)
+      .on('finish', () => {
+        resolve(uploadStream.id);
+      });
+  });
+};
+
+const downloadFile = async (fileId) => {
+  const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
+    bucketName: 'files',
+  });
+  return new Promise((resolve, reject) => {
+    // temporary variable to hold image
+    var data = [];
+
+    // create the download stream
+    const readstream = bucket.openDownloadStream(new ObjectID(fileId));
+    readstream.on('data', function (chunk) {
+      data.push(chunk);
+    });
+    readstream.on('error', async (error) => {
+      reject(error);
+    });
+    readstream.on('end', async () => {
+      let bufferBase64  = Buffer.concat(data);
+      const img = bufferBase64.toString('base64');
+      resolve(img);
+    });
+  });
+};
 
 module.exports = {
+  Upload: GraphQLUpload,
   Query: {
+    async getImage(_, { fileId }) {
+      const img = await downloadFile(fileId).then((result) => result);
+      return img;
+      // bucket.find({ _id: new ObjectID(fileId) }).toArray((err, files) => {
+      //   if (err) {
+      //     console.log(err);
+      //   } else if (!files || !files[0]) {
+      //     throw new Error('File Not Found');
+      //   } else {
+      //     // Check if is image
+      //     if (
+      //       files[0].contentType === 'image/jpeg' ||
+      //       files[0].contentType === 'image/png'
+      //     ) {
+
+      //     } else {
+      //       throw new Error('Not an Image');
+      //     }
+      //   }
+      // });
+    },
     async getUser(_, { userId }) {
       try {
         const user = await User.findById(userId);
@@ -57,7 +128,6 @@ module.exports = {
       }
 
       const token = generateToken(user);
-
       return {
         ...user._doc,
         id: user._id,
@@ -65,8 +135,8 @@ module.exports = {
       };
     },
     async register(
-      parent,
-      { registerInput: { username, password, confirmPassword, email } },
+      _,
+      { registerInput: { username, password, confirmPassword, email, file } },
       context,
       info
     ) {
@@ -92,13 +162,14 @@ module.exports = {
           },
         });
       }
-
+      const fileId = await storeFile(file).then((result) => result);
       // TODO: Hash Password and token gen
       password = await bcrypt.hash(password, 12);
       const newUser = new User({
         email,
         password,
         username,
+        fileId,
         createdAt: new Date().toISOString(),
       });
       const res = await newUser.save();
