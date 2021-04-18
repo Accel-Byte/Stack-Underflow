@@ -1,21 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Button, Form } from 'semantic-ui-react';
-import { gql } from '@apollo/client';
-import { useMutation } from '@apollo/client';
+import { Button } from 'semantic-ui-react';
 
-
-function Editor({ id }) {
-  const [problemStatement, setProblemStatement] = useState('');
-
-  const [submitAnswer, { loading }] = useMutation(SUBMIT_ANSWER_MUTATION, {
-    variables: { postId: id, body: problemStatement },
-    update(){
-      setProblemStatement('');
-    }
-  });
-
+const Editor = ({ loading, editorText, handleChange }) => {
+  
   const modules = {syntax: true};
   modules.toolbar = [
     ['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -57,20 +46,14 @@ function Editor({ id }) {
     'formula',
     'video',
   ];
-  const handleChange = (value) => {
-    setProblemStatement(value);
-  };
-  const onSubmit = () => {
-    submitAnswer();
-  };
+  
   return (
     <div>
-      <Form onSubmit={onSubmit}>
         <ReactQuill
           modules={modules}
           formats={formats}
           theme="snow"
-          value={problemStatement}
+          value={editorText}
           onChange={handleChange}
         />
         <Button
@@ -82,32 +65,9 @@ function Editor({ id }) {
           style={{ margin: '0.8rem 0 0 0' }}
           secondary
         ></Button>
-      </Form>
     </div>
   );
 }
 
-const SUBMIT_ANSWER_MUTATION = gql`
-  mutation createAnswer($postId: ID!, $body: String!) {
-    createAnswer(postId: $postId, body: $body) {
-      id
-      createdAt
-      answers {
-        id
-        body
-        createdAt
-        upvotes {
-          username
-          createdAt
-        }
-        downvotes {
-          username
-          createdAt
-        }
-        voteCount
-      }
-    }
-  }
-`;
 
 export default Editor;

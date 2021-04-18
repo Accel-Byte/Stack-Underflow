@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Grid } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client';
 
@@ -9,58 +9,66 @@ import Editor from './Editor';
 
 function PostForm(props) {
   const [errors, setErrors] = useState({});
-  const { values, onChange, onSubmit } = useForm(createPostCallback, {
-    body: '',
-  });
+  const [question, setQuestion] = useState('');
 
-  const [createPost] = useMutation(CREATE_POST_MUTATION, {
-    variables: values,
-    update(proxy, result) {
-      const data = proxy.readQuery({
-        query: FETCH_POSTS_QUERY,
-      });
-      proxy.writeQuery({
-        query: FETCH_POSTS_QUERY,
-        data: {
-          getPosts: [result.data.createPost, ...data.getPosts],
-        },
-      });
-      values.body = '';
-      props.history.push('/');
-    },
-    onError(err) {
-      console.log(err);
-    },
+  const { onChange, onSubmit, values } = useForm(createPostCallback, {
+    title: '',
   });
+  const [createPost, { loading: createPostLoading }] = useMutation(
+    CREATE_POST_MUTATION,
+    {
+      variables: {
+        title: values.title,
+        body: question,
+      },
+      update(proxy, result) {
+        const data = proxy.readQuery({
+          query: FETCH_POSTS_QUERY,
+        });
+        proxy.writeQuery({
+          query: FETCH_POSTS_QUERY,
+          data: {
+            getPosts: [result.data.createPost, ...data.getPosts],
+          }
+        });
+        props.history.push('/');
+      },
+      onError(err) {
+        console.log(err);
+      },
+    }
+  );
 
   function createPostCallback() {
     createPost();
   }
 
+  const answerChange = (value) => {
+    setQuestion(value);
+  };
   return (
     <>
       <Form onSubmit={onSubmit}>
         <h2>Create a Question</h2>
         <Form.Field>
-          <label style={{fontSize:"1.125rem"}}>Title</label>
+          <label style={{ fontSize: '1.125rem' }}>Title</label>
           <input
             placeholder="Hi World!"
-            name="body"
+            name="title"
             onChange={onChange}
-            value={values.body}
+            value={values.title}
             error={errors.post === null ? true : false}
           />
         </Form.Field>
         <Form.Field>
-          <label style={{fontSize:"1.125rem"}}>Question</label>
-          <Editor />
+          <label style={{ fontSize: '1.125rem' }}>Question</label>
+          <Editor
+            loading={createPostLoading}
+            editorText={question}
+            handleChange={answerChange}
+          />
         </Form.Field>
         <br />
-        <Form.Field>
-          <Button type="submit" color="teal">
-            Submit
-          </Button>
-        </Form.Field>
       </Form>
 
       {Object.keys(errors).length > 0 && (
@@ -77,25 +85,34 @@ function PostForm(props) {
 }
 
 const CREATE_POST_MUTATION = gql`
-  mutation createPost($body: String!) {
-    createPost(body: $body) {
+  mutation createPost($title: String!, $body: String!) {
+    createPost(title: $title, body: $body) {
+      user
       id
-      body
-      createdAt
-      username
-      likes {
-        id
+      question {
         username
-        createdAt
-      }
-      likeCount
-      comments {
-        id
         body
-        username
-        createdAt
+        title
+        upvotes {
+          username
+        }
+        downvotes {
+          username
+        }
+        voteCount
       }
-      commentCount
+      answers {
+        username
+        body
+        upvotes {
+          username
+        }
+        downvotes {
+          username
+        }
+        voteCount
+      }
+      createdAt
     }
   }
 `;

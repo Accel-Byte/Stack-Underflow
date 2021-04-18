@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { gql, useQuery } from '@apollo/client';
-import { Card, Grid, Image, Divider } from 'semantic-ui-react';
+import React, { useContext, useState } from 'react';
+import { gql, useQuery, useMutation } from '@apollo/client';
+import { Card, Grid, Image, Divider, Form } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
 import VoteButton from '../components/Button/voteButton';
@@ -19,7 +19,7 @@ function SinglePost(props) {
   const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
     skip: !getPost,
     variables: {
-       userId: getPost && getPost.user,
+      userId: getPost && getPost.user,
     },
   });
   const { data: { getImage: image } = {} } = useQuery(FETCH_IMAGE_QUERY, {
@@ -28,7 +28,22 @@ function SinglePost(props) {
       fileId: getUser && getUser.fileId,
     },
   });
-  
+
+  const [answer, setAnswer] = useState('');
+
+  const [submitAnswer, { loading : submitAnswerLoading}] = useMutation(SUBMIT_ANSWER_MUTATION, {
+    variables: { postId: getPost?.id, body: answer },
+    update() {
+      setAnswer('');
+    },
+  });
+
+  const onSubmit = () => {
+    submitAnswer();
+  };
+  const answerChange = (value) => {
+    setAnswer(value);
+  };
   let postMarkup;
   if (!getPost) {
     postMarkup = <p>Loading post..</p>;
@@ -106,7 +121,14 @@ function SinglePost(props) {
                   <Grid.Row>
                     <Card fluid color="yellow" style={{ padding: '10px' }}>
                       <Card.Content>
-                        <Editor id={id} />
+                        <Form onSubmit={onSubmit}>
+                          <Editor
+                            loading={submitAnswerLoading}
+                            editorText={answer}
+                            setEditorText={setAnswer}
+                            handleChange={answerChange}
+                          />
+                        </Form>
                       </Card.Content>
                     </Card>
                   </Grid.Row>
@@ -162,21 +184,44 @@ const FETCH_POST_QUERY = gql`
       }
       user
     }
-    
   }
 `;
+
 const FETCH_IMAGE_QUERY = gql`
-  query($fileId: ID!){
+  query($fileId: ID!) {
     getImage(fileId: $fileId)
   }
 `;
+
 const FETCH_USER_QUERY = gql`
-  query($userId: ID!){
-    getUser(userId: $userId){
-      fileId,
+  query($userId: ID!) {
+    getUser(userId: $userId) {
+      fileId
       username
     }
   }
 `;
 
+const SUBMIT_ANSWER_MUTATION = gql`
+  mutation createAnswer($postId: ID!, $body: String!) {
+    createAnswer(postId: $postId, body: $body) {
+      id
+      createdAt
+      answers {
+        id
+        body
+        createdAt
+        upvotes {
+          username
+          createdAt
+        }
+        downvotes {
+          username
+          createdAt
+        }
+        voteCount
+      }
+    }
+  }
+`;
 export default SinglePost;
