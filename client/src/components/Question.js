@@ -85,8 +85,8 @@ function Question({ post, user, deletePostCallback }) {
         />
       </Card.Content>
       <Card.Content>
-        {post.question.comments.map((comment) => (
-          <ShowComment comment={comment} id={post.id} user={user} />
+        {post.question.comments.map((comment, i) => (
+          <ShowComment key={i} comment={comment} id={post.id} user={user} />
         ))}
       </Card.Content>
     </Card>

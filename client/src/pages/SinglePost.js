@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { Card, Grid, Image, Divider, Form } from 'semantic-ui-react';
 
@@ -11,11 +11,14 @@ import Question from '../components/Question';
 function SinglePost(props) {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-  const { data: { getPost } = {} } = useQuery(FETCH_POST_QUERY, {
-    variables: {
-      postId,
-    },
-  });
+  const { subscribeToMore, data: { getPost } = {} } = useQuery(
+    FETCH_POST_QUERY,
+    {
+      variables: {
+        postId,
+      },
+    }
+  );
   const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
     skip: !getPost,
     variables: {
@@ -29,14 +32,66 @@ function SinglePost(props) {
     },
   });
 
+  useEffect(() => {
+    subscribeToMore({
+      document: NEW_COMMENT_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        console.log(subscriptionData);
+        if (!subscriptionData.data) return prev;
+        const newComment = subscriptionData.data.newComment;
+
+        let updatedPosts = Object.assign(
+          {},
+          {
+            getPost: {
+              ...prev.getPost,
+              question: {
+                ...prev.getPost.question,
+                comments: [...prev.getPost.question.comments, newComment],
+              },
+            },
+          }
+        );
+        console.log(updatedPosts);
+        return updatedPosts;
+      },
+    });
+
+    subscribeToMore({
+      document: NEW_ANSWER_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        console.log(subscriptionData);
+        if (!subscriptionData.data) return prev;
+        const newAnswer = subscriptionData.data.newAnswer;
+
+        let updatedPosts = Object.assign(
+          {},
+          {
+            getPost: {
+              ...prev.getPost,
+              answers: [...prev.getPost.answers,newAnswer],
+            },
+          }
+        );
+        console.log(updatedPosts);
+        return updatedPosts;
+      },
+    });
+
+    return () => {};
+  }, [subscribeToMore]);
+
   const [answer, setAnswer] = useState('');
 
-  const [submitAnswer, { loading : submitAnswerLoading}] = useMutation(SUBMIT_ANSWER_MUTATION, {
-    variables: { postId: getPost?.id, body: answer },
-    update() {
-      setAnswer('');
-    },
-  });
+  const [submitAnswer, { loading: submitAnswerLoading }] = useMutation(
+    SUBMIT_ANSWER_MUTATION,
+    {
+      variables: { postId: getPost?.id, body: answer },
+      update() {
+        setAnswer('');
+      },
+    }
+  );
 
   const onSubmit = () => {
     submitAnswer();
@@ -224,4 +279,36 @@ const SUBMIT_ANSWER_MUTATION = gql`
     }
   }
 `;
+
+const NEW_COMMENT_SUBSCRIPTION = gql`
+  subscription newComment {
+    newComment {
+      id
+      body
+      createdAt
+      username
+    }
+  }
+`;
+
+const NEW_ANSWER_SUBSCRIPTION = gql`
+  subscription newAnswer {
+    newAnswer {
+      id
+      body
+      createdAt
+      upvotes {
+        username
+        createdAt
+      }
+      downvotes {
+        username
+        createdAt
+      }
+      voteCount
+      username
+    }
+  }
+`;
+
 export default SinglePost;
