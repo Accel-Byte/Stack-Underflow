@@ -1,4 +1,5 @@
 const { ApolloServer, PubSub } = require('apollo-server-express');
+const http  = require('http');
 const mongoose = require('mongoose');
 const express = require('express');
 const { graphqlUploadExpress } = require('graphql-upload');
@@ -16,17 +17,27 @@ app.use(cors());
 
 mongoose
   .connect(MONGODB, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+  .then(async () => {
     console.log('Connected to mongodb');
     const pubsub = new PubSub();
     const server = new ApolloServer({
       typeDefs,
-      resolvers,
+      resolvers,  
       uploads: false,
+      subscriptions:{
+        path: '/subscriptions'
+      },
       context: ({ req }) => ({ req, pubsub }),
     });
+    await server.start();
     server.applyMiddleware({ app });
-    app.listen(PORT,() => console.log("started"));    
+    const httpServer = http.createServer(app);
+    server.installSubscriptionHandlers(httpServer);
+    
+    httpServer.listen(PORT,() => {
+      console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
+      console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
+    });    
   })
   .catch((err) => console.log(err));
 

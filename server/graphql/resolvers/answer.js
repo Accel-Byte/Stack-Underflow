@@ -1,6 +1,7 @@
 const { UserInputError, AuthenticationError } = require('apollo-server');
 const Post = require('../../Models/Post');
 const checkAuth = require('../../utils/check-auth');
+const mongoose = require('mongoose');
 
 module.exports = {
   Mutation: {
@@ -15,13 +16,21 @@ module.exports = {
       }
 
       const post = await Post.findById(postId);
+      const newAnswer = {
+        id: mongoose.Types.ObjectId().toHexString(),
+        body,
+        username,
+        upvotes:[],
+        downvotes:[],
+        voteCount:0,
+        createdAt: new Date().toISOString(),
+      };
       if (post) {
-        post.answers.unshift({
-          body,
-          username,
-          createdAt: new Date().toISOString(),
-        });
+        post.answers.unshift(newAnswer);
         await post.save();
+        context.pubsub.publish('NEW_ANSWER', {
+          newAnswer,
+        });
         return post;
       } else throw new UserInputError('Post not found');
     },
@@ -142,6 +151,13 @@ module.exports = {
         await post.save();
         return post;
       } else throw new UserInputError('Post not found');
+    },
+  },
+  Subscription: {
+    newAnswer: {
+      subscribe: (_, __, { pubsub }) => {
+        return pubsub.asyncIterator('NEW_ANSWER');
+      },
     },
   },
 };

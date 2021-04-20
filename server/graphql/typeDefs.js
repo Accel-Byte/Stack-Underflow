@@ -77,5 +77,7 @@ module.exports = gql`
   }
   type Subscription {
     newPost: Post!
+    newComment: Comment!
+    newAnswer: Answer!
   }
 `;
