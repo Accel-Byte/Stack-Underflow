@@ -7,10 +7,10 @@ import moment from 'moment';
 
 function ShowComment({user,id, comment}) {
   return (
-    <Card fluid key={comment.id}>
+    <Card fluid key={comment._id}>
       <Card.Content style={{ padding: '4px 10px 4px 10px' }}>
         {user && user.username === comment.username && (
-          <DeleteButton postId={id} commentId={comment.id} />
+          <DeleteButton postId={id} commentId={comment._id} />
         )}
         <Card.Header
           style={{

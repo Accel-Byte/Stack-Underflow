@@ -157,8 +157,8 @@ function SinglePost(props) {
                     {answers.length} Answers
                   </h2>
                 </Grid.Row>
-                {answers.map((answer) => (
-                  <Grid.Row key={answer.id}>
+                {answers.map((answer,i) => (
+                  <Grid.Row key={i}>
                     <Answer answer={answer} user={user} id={id} />
                   </Grid.Row>
                 ))}
@@ -216,14 +216,14 @@ const FETCH_POST_QUERY = gql`
         }
         voteCount
         comments {
-          id
+          _id
           username
           body
           createdAt
         }
       }
       answers {
-        id
+        _id
         body
         createdAt
         upvotes {
@@ -263,7 +263,7 @@ const SUBMIT_ANSWER_MUTATION = gql`
       id
       createdAt
       answers {
-        id
+        _id
         body
         createdAt
         upvotes {
@@ -283,7 +283,7 @@ const SUBMIT_ANSWER_MUTATION = gql`
 const NEW_COMMENT_SUBSCRIPTION = gql`
   subscription newComment {
     newComment {
-      id
+      _id
       body
       createdAt
       username
@@ -294,7 +294,7 @@ const NEW_COMMENT_SUBSCRIPTION = gql`
 const NEW_ANSWER_SUBSCRIPTION = gql`
   subscription newAnswer {
     newAnswer {
-      id
+      _id
       body
       createdAt
       upvotes {

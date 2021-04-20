@@ -110,13 +110,13 @@ const SUBMIT_COMMENT_MUTATION = gql`
         }
         voteCount
         comments {
-          id
+          _id
           body
           username
         }
       }
       answers {
-        id
+        _id
         body
         createdAt
       }

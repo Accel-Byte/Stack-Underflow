@@ -11,7 +11,7 @@ const Answer = ({ answer, user, id }) => {
         <VoteButton
           user={user}
           id={id}
-          answerId={answer.id}
+          answerId={answer._id}
           voteCount={answer.voteCount}
           upvotes={answer.upvotes}
           downvotes={answer.downvotes}

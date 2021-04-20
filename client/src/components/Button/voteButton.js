@@ -9,7 +9,7 @@ import MyPopup from '../../utils/MyPopup';
 function VoteButton({ user, id, voteCount, upvotes, downvotes, answerId }) {
   const [state, setState] = useState({
     vote: 0,
-  });
+    });
   useEffect(() => {
     if (user && upvotes.find((upvote) => upvote.username === user.username)) {
       setState({
@@ -169,7 +169,7 @@ const UPVOTE_ANSWER_MUTATION = gql`
   mutation upvoteAnswer($postId: ID!, $answerId: ID!) {
     upvoteAnswer(postId: $postId, answerId: $answerId) {
       answers {
-        id
+        _id
         upvotes {
           username
           createdAt
@@ -187,7 +187,7 @@ const DOWNVOTE_ANSWER_MUTATION = gql`
   mutation downvoteAnswer($postId: ID!, $answerId: ID!) {
     downvoteAnswer(postId: $postId, answerId: $answerId) {
       answers {
-        id
+        _id
         upvotes {
           username
           createdAt

@@ -92,7 +92,7 @@ const DELETE_COMMENT_MUTATION = gql`
         }
       }
       answers {
-        id
+        _id
         body
         createdAt
       }
