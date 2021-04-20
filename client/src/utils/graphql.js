@@ -33,6 +33,7 @@ export const NEW_POST_SUBSCRIPTION = gql`
       }
       createdAt
       answers {
+        _id
         body
         upvotes {
           username
