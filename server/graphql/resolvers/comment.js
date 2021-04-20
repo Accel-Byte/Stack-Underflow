@@ -17,7 +17,7 @@ module.exports = {
 
       const post = await Post.findById(postId);
       const newComment = {
-        id: mongoose.Types.ObjectId().toHexString(),
+        _id: mongoose.Types.ObjectId().toHexString(),
         body,
         username,
         createdAt: new Date().toISOString(),

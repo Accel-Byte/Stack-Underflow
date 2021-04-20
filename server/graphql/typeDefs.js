@@ -3,7 +3,7 @@ const gql = require('graphql-tag');
 module.exports = gql`
   scalar Upload
   type Comment {
-    id: ID!
+    _id: ID!
     username: String!
     createdAt: String!
     body: String!
@@ -24,7 +24,7 @@ module.exports = gql`
     commentCount: Int!
   }
   type Answer {
-    id: ID!
+    _id: ID!
     body: String!
     username: String!
     upvotes: [Vote]!

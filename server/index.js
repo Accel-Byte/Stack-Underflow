@@ -36,7 +36,7 @@ mongoose
     
     httpServer.listen(PORT,() => {
       console.log(`🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`);
-      console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`);
+      console.log(`🚀 Subscriptions ready at ws://localhost:${PORT}/graphql${server.subscriptionsPath}`);
     });    
   })
   .catch((err) => console.log(err));

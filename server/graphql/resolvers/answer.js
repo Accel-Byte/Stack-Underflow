@@ -17,7 +17,7 @@ module.exports = {
 
       const post = await Post.findById(postId);
       const newAnswer = {
-        id: mongoose.Types.ObjectId().toHexString(),
+        _id: mongoose.Types.ObjectId().toHexString(),
         body,
         username,
         upvotes:[],
@@ -62,7 +62,7 @@ module.exports = {
       const post = await Post.findById(postId);
       if (post) {
         const answerIndex = post.answers.findIndex(
-          (answer) => answer.id === answerId
+          (answer) => answer._id === answerId
         );
         if (answerIndex !== -1) {
           if (
