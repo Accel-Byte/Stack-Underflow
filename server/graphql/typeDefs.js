@@ -74,6 +74,7 @@ module.exports = gql`
     downvotePost(postId: ID!): Post!
     upvoteAnswer(postId: ID!, answerId: ID!): Post!
     downvoteAnswer(postId: ID!, answerId: ID!): Post!
+    updateImage(userId: ID!, fileId: ID!, file: Upload!): User!
   }
   type Subscription {
     newPost: Post!
