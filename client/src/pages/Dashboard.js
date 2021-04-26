@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useQuery, gql } from '@apollo/client';
 import {
   Grid,
@@ -6,11 +6,12 @@ import {
   Divider,
   Image,
   Card,
-  Icon,
+  Button,
 } from 'semantic-ui-react';
 import moment from 'moment';
 
 import DashboardCard from '../components/PostCard/DashboardCard';
+import UpdateImage from '../components/UpdateImage';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
@@ -37,13 +38,15 @@ const Dashboard = (props) => {
       votes += post.question.voteCount;
     });
   }
+
+  const [open, setOpen] = useState(false);
   return (
     <Grid>
       <Grid.Column width={3}>
         <Grid.Row>
           <Card>
             <Image
-             src={image && 'data:image/jpeg;base64,' + image}
+              src={image && 'data:image/jpeg;base64,' + image}
               label={{
                 content: 'Community',
                 icon: 'users',
@@ -62,11 +65,8 @@ const Dashboard = (props) => {
                 Daniel is a comedian living in Nashville.
               </Card.Description>
             </Card.Content>
-            <Card.Content extra>
-              <a href="/    ">
-                <Icon name="user" />
-                10 Friends
-              </a>
+            <Card.Content extra style={{ margin: '0 auto' }}>
+              <UpdateImage open={open} setOpen={setOpen} userId={userId} fileId={user?.fileId} />
             </Card.Content>
           </Card>
         </Grid.Row>
@@ -145,7 +145,7 @@ const FETCH_DASHBOARD_DATA = gql`
 `;
 
 const FETCH_IMAGE_QUERY = gql`
-  query($fileId: ID!){
+  query($fileId: ID!) {
     getImage(fileId: $fileId)
   }
 `;

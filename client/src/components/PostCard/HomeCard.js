@@ -30,7 +30,7 @@ function PostCard({
       <Item>
         <Item.Image
           key={new Date()}
-          size="tiny"
+          size="tiny" 
           src={image && 'data:image/jpeg;base64,' + image}
         />
 
