@@ -182,6 +182,7 @@ module.exports = {
         });
       }
       try {
+        console.log(file);
         const fileId = await storeFile(file);
 
         // TODO: Hash Password and token gen
@@ -206,11 +207,10 @@ module.exports = {
     },
     async updateImage(_, { userId, fileId, file }, context, info) {
       try {
+        
         // Todo: Remove file
-        console.log(typeof fileId);
-        console.log(typeof userId); 
         await removeFile(fileId);
-
+        
         // Todo: Update User
         const newfileId = await storeFile(file);
         const user = await User.findOneAndUpdate(
