@@ -8,6 +8,10 @@ export const FETCH_POSTS_QUERY = gql`
       question {
         username
         body
+        tags {
+          id
+          name
+        }
         title
         commentCount
       }
@@ -23,6 +27,10 @@ export const NEW_POST_SUBSCRIPTION = gql`
       question {
         title
         body
+        tags {
+          id
+          name
+        }
         upvotes {
           username
         }

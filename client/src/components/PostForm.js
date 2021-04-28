@@ -6,10 +6,12 @@ import { useMutation } from '@apollo/client';
 import { useForm } from '../utils/hooks';
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
 import Editor from './Editor';
+import QuestionTag from './QuestionTag/QuestionTag.js';
 
 function PostForm(props) {
   const [errors, setErrors] = useState({});
   const [question, setQuestion] = useState('');
+  const [tags, setTags] = useState([]);
 
   const { onChange, onSubmit, values } = useForm(createPostCallback, {
     title: '',
@@ -20,6 +22,7 @@ function PostForm(props) {
       variables: {
         title: values.title,
         body: question,
+        tags,
       },
       update(proxy, result) {
         const data = proxy.readQuery({
@@ -29,11 +32,12 @@ function PostForm(props) {
           query: FETCH_POSTS_QUERY,
           data: {
             getPosts: [result.data.createPost, ...data.getPosts],
-          }
+          },
         });
         props.history.push('/');
       },
       onError(err) {
+        console.log(tags[0]);
         console.log(err);
       },
     }
@@ -61,6 +65,10 @@ function PostForm(props) {
           />
         </Form.Field>
         <Form.Field>
+          <label style={{ fontSize: '1.125rem' }}>Tags</label>
+          <QuestionTag tags={tags} setTags={setTags} />
+        </Form.Field>
+        <Form.Field>
           <label style={{ fontSize: '1.125rem' }}>Question</label>
           <Editor
             loading={createPostLoading}
@@ -85,14 +93,18 @@ function PostForm(props) {
 }
 
 const CREATE_POST_MUTATION = gql`
-  mutation createPost($title: String!, $body: String!) {
-    createPost(title: $title, body: $body) {
+  mutation createPost($title: String!, $body: String!, $tags: [tagInput]!) {
+    createPost(title: $title, body: $body, tags: $tags) {
       user
       id
       question {
         username
         body
         title
+        tags {
+          id
+          name
+        }
         upvotes {
           username
         }
