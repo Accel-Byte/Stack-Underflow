@@ -39,15 +39,22 @@ module.exports = {
     },
   },
   Mutation: {
-    async createPost(_, { title, body }, context) {
+    async createPost(_, { title, body, tags }, context) {
       const user = checkAuth(context);
       if (title.trim() === '') {
+        throw new Error('Post title must not be empty');
+      }
+      else if (body.trim() === '') {
         throw new Error('Post body must not be empty');
+      }
+      else if (tags=== null || tags.length == 0) {
+        throw new Error('Post Tags must not be empty');
       }
       const newPost = new Post({
         question: {
           title: title,
           body: body,
+          tags: tags,
           username: user.username,
         },
         createdAt: new Date().toISOString(),

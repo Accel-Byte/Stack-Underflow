@@ -13,11 +13,16 @@ module.exports = gql`
     username: String!
     createdAt: String!
   }
+  type Tag {
+    id: Int!
+    name: String!
+  }
   type Question {
     title: String!
     username: String!
     body: String!
     comments: [Comment]!
+    tags: [Tag]!
     upvotes: [Vote]!
     downvotes: [Vote]!
     voteCount: Int!
@@ -54,6 +59,10 @@ module.exports = gql`
     email: String!
     file: Upload!
   }
+  input tagInput {
+    id: Int!
+    name: String!
+  }
   type Query {
     getPosts: [Post]
     getPost(postId: ID!): Post
@@ -64,7 +73,7 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!
-    createPost(title: String!, body: String!): Post!
+    createPost(title: String!, body: String!, tags: [tagInput]!): Post!
     deletePost(postId: ID!): String!
     createComment(postId: ID!, body: String!): Post!
     deleteComment(postId: ID!, commentId: ID!): Post!
