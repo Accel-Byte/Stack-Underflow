@@ -13,6 +13,17 @@ function Question({ post, user, deletePostCallback }) {
   const commentInputRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [comment, setComment] = useState('');
+  const colors = [
+    'orange',
+    'yellow',
+    'olive',
+    'green',
+    'teal',
+    'violet',
+    'purple',
+    'pink',
+    'brown',
+  ];
   const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
     update() {
       setComment('');
@@ -46,11 +57,18 @@ function Question({ post, user, deletePostCallback }) {
           {'By ' + post.question.username}
         </Card.Description>
         <Divider />
-        <Card.Description style={{ fontSize: '16px', color: '#000' }}>
-          {post.question.body}
-        </Card.Description>
+        <Card.Description
+          style={{ fontSize: '16px', color: '#000', overflowWrap: 'break-word' }}
+          dangerouslySetInnerHTML={{ __html: post.question.body }}
+        />
       </Card.Content>
-      <hr />
+      <Card.Content>
+        {post.question.tags.map((tag, i) => (
+          <Label as="a" key={tag.id} color={colors[i % colors.length]}>
+            {tag.name}
+          </Label>
+        ))}
+      </Card.Content>
       <Card.Content extra>
         <MyPopup content="Comment on post">
           <Button
@@ -102,6 +120,10 @@ const SUBMIT_COMMENT_MUTATION = gql`
         username
         body
         title
+        tags {
+          id
+          name
+        }
         upvotes {
           username
         }

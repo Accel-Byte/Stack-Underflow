@@ -208,6 +208,10 @@ const FETCH_POST_QUERY = gql`
         username
         body
         title
+        tags {
+          id
+          name
+        }
         upvotes {
           username
         }
