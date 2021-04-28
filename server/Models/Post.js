@@ -30,13 +30,17 @@ const commentSchema = Schema({
   createdAt: String,
 });
 
+const tagSchema = Schema({
+  id: Number,
+  name: String
+});
+
 const questionSchema = Schema({
   body: String,
   title: String,
   username: String,
-  comments: [
-    commentSchema
-  ],
+  tags: [tagSchema],
+  comments: [commentSchema],
   upvotes: [
     {
       username: String,
