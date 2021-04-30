@@ -24,16 +24,63 @@ function Register(props) {
       props.history.push('/');
     },
     onError(err) {
-      console.log(err);
-      // setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      console.log(err.graphQLErrors[0]);
+      setErrors(err.graphQLErrors[0].extensions.exception.errors);
     },
     variables: values,
   });
 
+  const validateEmail = () => {
+    const emailreg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+    if (!values.email.match(emailreg)) {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          email: 'Please enter a valid email address!',
+        };
+      });
+      return false;
+    } else {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          email: '',
+        };
+      });
+    }
+    return true;
+  };
+  const validatePassword = () => {
+    const passwordreg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%#*?&])[A-Za-z\d@$!%#*?&]{8,}$/;
+    if (!values.password.match(passwordreg)) {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          password:
+            'Use 8 or more characters with a mix of letters, numbers & symbols :)',
+        };
+      });
+      return false;
+    } else {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          password: '',
+        };
+      });
+    }
+    return true;
+  };
+
   function registerUser() {
-    console.log(values.file);
-    addUser();
+    setErrors({});
+    if (validateEmail() && validatePassword()) {
+      setErrors({});
+      addUser();
+    }
   }
+
+  
 
   return (
     <div className="form-container">
@@ -47,6 +94,7 @@ function Register(props) {
           value={values.username}
           error={errors.username ? true : false}
           onChange={onChange}
+          required
         />
         <Form.Input
           label="Email"
@@ -56,6 +104,7 @@ function Register(props) {
           value={values.email}
           error={errors.email ? true : false}
           onChange={onChange}
+          required
         />
         <Form.Input
           label="Password"
@@ -65,6 +114,7 @@ function Register(props) {
           value={values.password}
           error={errors.password ? true : false}
           onChange={onChange}
+          required
         />
         <Form.Input
           label="Confirm Password"
@@ -74,8 +124,16 @@ function Register(props) {
           value={values.confirmPassword}
           error={errors.confirmPassword ? true : false}
           onChange={onChange}
+          required
         />
-        <Form.Input name="file" type="file" onChange={onChange} data-max-size="500000"  accept="image/*" />
+        <Form.Input
+          name="file"
+          type="file"
+          required
+          onChange={onChange}
+          data-max-size="500000"
+          accept="image/*"
+        />
         <Button type="submit" primary>
           Register
         </Button>
@@ -92,7 +150,6 @@ function Register(props) {
     </div>
   );
 }
-
 
 const REGISTER_USER = gql`
   mutation register(
