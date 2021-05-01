@@ -1,13 +1,11 @@
 import React from 'react';
-import {
-    Card,
-} from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import DeleteButton from '../DeleteButton';
 import moment from 'moment';
 
-function ShowComment({user,id, comment}) {
+function ShowComment({ user, id, comment }) {
   return (
-    <Card fluid key={comment._id}>
+    <Card fluid>
       <Card.Content style={{ padding: '4px 10px 4px 10px' }}>
         {user && user.username === comment.username && (
           <DeleteButton postId={id} commentId={comment._id} />
