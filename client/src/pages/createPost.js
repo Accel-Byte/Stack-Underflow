@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Grid } from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
 import PostForm from '../components/PostForm';
