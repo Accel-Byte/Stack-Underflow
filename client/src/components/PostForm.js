@@ -37,8 +37,13 @@ function PostForm(props) {
         props.history.push('/');
       },
       onError(err) {
-        console.log(tags[0]);
-        console.log(err);
+        if (err.graphQLErrors[0].extensions.exception.errors)
+          setErrors(err.graphQLErrors[0].extensions.exception.errors);
+        else {
+          setErrors({
+            message: err.message,
+          });
+        }
       },
     }
   );
@@ -61,7 +66,8 @@ function PostForm(props) {
             name="title"
             onChange={onChange}
             value={values.title}
-            error={errors.post === null ? true : false}
+            error={errors.post ? true : false}
+            required
           />
         </Form.Field>
         <Form.Field>
