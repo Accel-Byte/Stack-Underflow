@@ -1,42 +1,68 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
-import { Card, Grid, Image, Divider, Form } from 'semantic-ui-react';
+import {
+  Card,
+  Grid,
+  Image,
+  Divider,
+  Form,
+  Dimmer,
+  Loader,
+  Segment,
+} from 'semantic-ui-react';
 
 import { AuthContext } from '../context/auth';
 import VoteButton from '../components/Button/voteButton';
 import Editor from '../components/Editor';
 import Answer from '../components/Answer';
 import Question from '../components/Question';
+import NothingHere from '../components/NothingHere/NothingHere';
 
-function SinglePost(props) {
+const SinglePost = (props) => {
   const postId = props.match.params.postId;
   const { user } = useContext(AuthContext);
-  const { subscribeToMore, data: { getPost } = {} } = useQuery(
-    FETCH_POST_QUERY,
-    {
-      variables: {
-        postId,
-      },
-    }
-  );
+  const [postDoesNotExist, setPostDoesNotExist] = useState(false);
+  const [answer, setAnswer] = useState('');
+
+  const {
+    subscribeToMore,
+    data: { getPost } = {},
+    loading: postLoading,
+  } = useQuery(FETCH_POST_QUERY, {
+    variables: {
+      postId,
+    },
+    onCompleted: (data) => {
+      if (!data.getPost) {
+        setPostDoesNotExist(true);
+      }
+    },
+    onError: (error) => {
+      if (error.message === 'PostNotFound') {
+        setPostDoesNotExist(true);
+      }
+    },
+  });
   const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
     skip: !getPost,
     variables: {
       userId: getPost && getPost.user,
     },
   });
-  const { data: { getImage: image } = {} } = useQuery(FETCH_IMAGE_QUERY, {
-    skip: !getUser,
-    variables: {
-      fileId: getUser && getUser.fileId,
-    },
-  });
+  const { data: { getImage: image } = {}, loading: imageLoading } = useQuery(
+    FETCH_IMAGE_QUERY,
+    {
+      skip: !getUser,
+      variables: {
+        fileId: getUser && getUser.fileId,
+      },
+    }
+  );
 
   useEffect(() => {
     subscribeToMore({
       document: NEW_COMMENT_SUBSCRIPTION,
       updateQuery: (prev, { subscriptionData }) => {
-        console.log(subscriptionData);
         if (!subscriptionData.data) return prev;
         const newComment = subscriptionData.data.newComment;
 
@@ -52,7 +78,6 @@ function SinglePost(props) {
             },
           }
         );
-        console.log(updatedPosts);
         return updatedPosts;
       },
     });
@@ -69,19 +94,16 @@ function SinglePost(props) {
           {
             getPost: {
               ...prev.getPost,
-              answers: [...prev.getPost.answers,newAnswer],
+              answers: [...prev.getPost.answers, newAnswer],
             },
           }
         );
-        console.log(updatedPosts);
         return updatedPosts;
       },
     });
 
     return () => {};
   }, [subscribeToMore]);
-
-  const [answer, setAnswer] = useState('');
 
   const [submitAnswer, { loading: submitAnswerLoading }] = useMutation(
     SUBMIT_ANSWER_MUTATION,
@@ -99,24 +121,28 @@ function SinglePost(props) {
   const answerChange = (value) => {
     setAnswer(value);
   };
-  let postMarkup;
-  if (!getPost) {
-    postMarkup = <p>Loading post..</p>;
-  } else {
-    const { id } = getPost;
-    const question = getPost.question;
-    let answers = getPost.answers;
 
+  function deletePostCallback() {
+    props.history.push('/');
+  }
+  let answers = [];
+  if (getPost) {
+    answers = getPost.answers;
     answers = answers
       .slice()
       .sort((a, b) => (b.voteCount > a.voteCount ? 1 : -1));
+  }
 
-    function deletePostCallback() {
-      props.history.push('/');
-    }
-    postMarkup = (
-      <Grid>
-        <Grid.Column width={3}>
+  const postMarkup = postDoesNotExist ? (
+    <NothingHere />
+  ) : (
+    <Grid>
+      <Dimmer active={postLoading}>
+        <Loader size="medium" />
+      </Dimmer>
+      <Grid.Column width={3}>
+        <Segment>
+          <Loader size="large" active={imageLoading} />
           <Image
             src={image && 'data:image/jpeg;base64,' + image}
             label={{
@@ -127,76 +153,82 @@ function SinglePost(props) {
             }}
             centered
           ></Image>
-        </Grid.Column>
-        <Grid.Column width={13}>
-          <Grid.Row>
-            <Grid>
-              <Grid.Column width={1} style={{ paddingTop: '1rem' }}>
+        </Segment>
+      </Grid.Column>
+      <Grid.Column width={13}>
+        <Grid.Row>
+          <Grid>
+            <Grid.Column width={1} style={{ paddingTop: '1rem' }}>
+              {getPost && (
                 <VoteButton
                   user={user}
-                  id={id}
-                  voteCount={question.voteCount}
-                  upvotes={question.upvotes}
-                  downvotes={question.downvotes}
+                  id={getPost.id}
+                  voteCount={getPost.question.voteCount}
+                  upvotes={getPost.question.upvotes}
+                  downvotes={getPost.question.downvotes}
                 />
-              </Grid.Column>
-              <Grid.Column width={15}>
+              )}
+            </Grid.Column>
+            <Grid.Column width={15}>
+              {getPost && (
                 <Question
                   post={getPost}
                   user={user}
                   deletePostCallback={deletePostCallback}
                 />
-              </Grid.Column>
-            </Grid>
-            <br />
-            <Divider />
-            <Grid.Row>
-              <Grid>
-                <Grid.Row>
-                  <h2 style={{ paddingLeft: '1rem' }}>
-                    {answers.length} Answers
-                  </h2>
-                </Grid.Row>
-                {answers.map((answer,i) => (
-                  <Grid.Row key={i}>
-                    <Answer answer={answer} user={user} id={id} />
+              )}
+            </Grid.Column>
+          </Grid>
+          <br />
+          <Divider />
+          <Grid.Row>
+            <Grid>
+              <Grid.Row>
+                <h2 style={{ paddingLeft: '1rem' }}>
+                  {answers.length} Answers
+                </h2>
+              </Grid.Row>
+              {getPost &&
+                answers.map((answer) => (
+                  <Grid.Row key={answer._id}>
+                    <Answer answer={answer} user={user} id={getPost.id} />
                   </Grid.Row>
                 ))}
-              </Grid>
-            </Grid.Row>
-            <br />
-            <Divider />
-            <Grid.Row>
-              <Grid>
-                <Grid.Column width={1}></Grid.Column>
-                <Grid.Column width={15}>
-                  <Grid.Row>
-                    <h2 style={{ paddingBottom: '1rem' }}>Your Answer : </h2>
-                  </Grid.Row>
-                  <Grid.Row>
-                    <Card fluid color="yellow" style={{ padding: '10px' }}>
-                      <Card.Content>
-                        <Form onSubmit={onSubmit}>
-                          <Editor
-                            loading={submitAnswerLoading}
-                            editorText={answer}
-                            setEditorText={setAnswer}
-                            handleChange={answerChange}
-                          />
-                        </Form>
-                      </Card.Content>
-                    </Card>
-                  </Grid.Row>
-                </Grid.Column>
-              </Grid>
-            </Grid.Row>
+            </Grid>
           </Grid.Row>
-        </Grid.Column>
-      </Grid>
-    );
-  }
+          <br />
+          <Divider />
+          <Grid.Row>
+            <Grid>
+              <Grid.Column width={1}></Grid.Column>
+              <Grid.Column width={15}>
+                <Grid.Row>
+                  <h2 style={{ paddingBottom: '1rem' }}>Your Answer : </h2>
+                </Grid.Row>
+                <Grid.Row>
+                  <Card fluid color="yellow" style={{ padding: '10px' }}>
+                    <Card.Content>
+                      <Form onSubmit={onSubmit}>
+                        <Editor
+                          loading={submitAnswerLoading}
+                          editorText={answer}
+                          setEditorText={setAnswer}
+                          handleChange={answerChange}
+                        />
+                      </Form>
+                    </Card.Content>
+                  </Card>
+                </Grid.Row>
+              </Grid.Column>
+            </Grid>
+          </Grid.Row>
+        </Grid.Row>
+      </Grid.Column>
+    </Grid>
+  );
+
   return postMarkup;
-}
+};
 
 const FETCH_POST_QUERY = gql`
   query($postId: ID!) {
