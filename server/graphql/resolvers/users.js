@@ -1,12 +1,10 @@
 const User = require('../../Models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { UserInputError, RenameRootFields } = require('apollo-server');
-const Grid = require('gridfs-stream');
+const { UserInputError } = require('apollo-server');
 const mongoose = require('mongoose');
 const { GraphQLUpload } = require('graphql-upload');
 const ObjectID = require('mongodb').ObjectID;
-const fs = require('fs');
 
 const {
   validateRegisterInput,
@@ -115,14 +113,18 @@ module.exports = {
     },
     async getUser(_, { userId }) {
       try {
-        const user = await User.findById(userId);
-        if (user) {
-          return user;
+        if (ObjectID.isValid(userId)) {
+          const user = await User.findById(new ObjectID(userId));
+          if (user) {
+            return user;
+          } else {
+            throw new Error('UserNotFound');
+          }
         } else {
-          throw new Error('User not found');
+          throw new Error('UserNotFound');
         }
       } catch (err) {
-        throw new Error(err);
+        throw err;
       }
     },
   },
@@ -207,10 +209,9 @@ module.exports = {
     },
     async updateImage(_, { userId, fileId, file }, context, info) {
       try {
-        
         // Todo: Remove file
         await removeFile(fileId);
-        
+
         // Todo: Update User
         const newfileId = await storeFile(file);
         const user = await User.findOneAndUpdate(
