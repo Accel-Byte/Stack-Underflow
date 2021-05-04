@@ -3,17 +3,36 @@ const ObjectID = require('mongodb').ObjectID;
 
 const Post = require('../../Models/Post');
 const checkAuth = require('../../utils/check-auth');
+const { paginateResults } = require('../../utils/apollo');
 
 module.exports = {
   Query: {
-    async getPosts() {
-      try {
-        const posts = await Post.find();
-        return posts;
-      } catch (err) {
-        throw new Error(err);
-      }
+    getPosts: async (_, { pageSize = 20, after }) => {
+      const allPosts = await Post.find();
+      // we want these in reverse chronological order
+      const posts = paginateResults({
+        after,
+        pageSize,
+        results: allPosts,
+      });
+      return {
+        posts,
+        cursor: posts.length ? posts[posts.length - 1]._id : null,
+        // if the cursor at the end of the paginated results is the same as the
+        // last item in _all_ results, then there are no more results after this
+        hasMore: posts.length
+          ? posts[posts.length - 1]._id !== allPosts[allPosts.length - 1]._id
+          : false,
+      };
     },
+    // async getPosts() {
+    //   try {
+    //     const posts = await Post.find();
+    //     return posts;
+    //   } catch (err) {
+    //     throw new Error(err);
+    //   }
+    // },
     async getPost(_, { postId }) {
       try {
         const post = await Post.findById(postId);
