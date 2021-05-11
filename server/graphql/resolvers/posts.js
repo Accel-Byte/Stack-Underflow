@@ -7,13 +7,15 @@ const { paginateResults } = require('../../utils/apollo');
 
 module.exports = {
   Query: {
-    getPosts: async (_, { pageSize = 20, after }) => {
-      const allPosts = await Post.find();
+    getPosts: async (_, { pageSize = 20, after, search }) => {
+      search = search ? search : ''; 
+      const resPosts = await Post.find({ 'question.title': new RegExp(search, "i")});
+      
       // we want these in reverse chronological order
       const posts = paginateResults({
         after,
         pageSize,
-        results: allPosts,
+        results: resPosts,
       });
       return {
         posts,
@@ -21,7 +23,7 @@ module.exports = {
         // if the cursor at the end of the paginated results is the same as the
         // last item in _all_ results, then there are no more results after this
         hasMore: posts.length
-          ? posts[posts.length - 1]._id !== allPosts[allPosts.length - 1]._id
+          ? posts[posts.length - 1]._id !== resPosts[resPosts.length - 1]._id
           : false,
       };
     },

@@ -64,12 +64,12 @@ module.exports = gql`
     name: String!
   }
   type GetPostsConnection {
-    cursor: ID!
+    cursor: ID
     hasMore: Boolean!
     posts: [Post]!
   }
   type Query {
-    getPosts(pageSize: Int, after: ID): GetPostsConnection!
+    getPosts(pageSize: Int, after: ID, search: String): GetPostsConnection!
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
     getUserPost(userId: ID!): [Post]
