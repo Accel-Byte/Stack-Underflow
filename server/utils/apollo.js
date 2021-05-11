@@ -6,7 +6,9 @@ module.exports.paginateResults = ({
   getCursor = () => null,
 }) => {
   if (pageSize < 1) return [];
- 
+  if (!results || results.length === 0) {
+    return [];
+  }
   if (!cursor) return results.slice(0, pageSize);
   
   const cursorIndex = results.findIndex((item) => {
