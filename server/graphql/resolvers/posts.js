@@ -1,4 +1,5 @@
-const { AuthenticationError, UserInputError } = require('apollo-server');
+const { AuthenticationError } = require('apollo-server');
+const { ApolloError } = require('apollo-server-errors');
 const ObjectID = require('mongodb').ObjectID;
 
 const Post = require('../../Models/Post');
@@ -6,10 +7,21 @@ const checkAuth = require('../../utils/check-auth');
 
 module.exports = {
   Query: {
-    async getPosts() {
+    async getPosts(_, { page }) {
+      let perPage = 2;
+      page = Math.abs(page) || 1; // if pageNumber is not passed
+      page = Math.max(1, page);
+
       try {
-        const posts = await Post.find();
-        return posts;
+        const posts = await Post.find()
+          .limit(perPage)
+          .skip(perPage * (page - 1));
+        const totalPostCount = await Post.count();
+        const result = {
+          posts,
+          totalPages : Math.ceil(totalPostCount / perPage)
+        }
+        return result;
       } catch (err) {
         throw new Error(err);
       }
@@ -20,10 +32,16 @@ module.exports = {
         if (post) {
           return post;
         } else {
-          throw new Error('PostNotFound');
+          throw new ApolloError(
+            'Post not found please check again',
+            'POST_NOT_FOUND'
+          );
         }
       } catch (err) {
-        throw new Error('PostNotFound');
+        throw new ApolloError(
+          'Post not found please check again',
+          'POST_NOT_FOUND'
+        );
       }
     },
     async getUserPost(_, { userId }) {
@@ -68,9 +86,6 @@ module.exports = {
         });
 
         const post = await newPost.save();
-        context.pubsub.publish('NEW_POST', {
-          newPost: post,
-        });
         return post;
       } catch (error) {
         throw error;
@@ -179,10 +194,5 @@ module.exports = {
     },
   },
   Subscription: {
-    newPost: {
-      subscribe: (_, __, { pubsub }) => {
-        return pubsub.asyncIterator('NEW_POST');
-      },
-    },
   },
 };

@@ -1,58 +1,24 @@
 import { gql } from '@apollo/client';
 
 export const FETCH_POSTS_QUERY = gql`
-  {
-    getPosts {
-      id
-      createdAt
-      question {
-        username
-        body
-        tags {
-          id
-          name
-        }
-        title
-        commentCount
-      }
-      user
-    }
-  }
-`;
-
-export const NEW_POST_SUBSCRIPTION = gql`
-  subscription newPost {
-    newPost {
-      user
-      question {
-        title
-        body
-        tags {
-          id
-          name
-        }
-        upvotes {
-          username
-        }
-        downvotes {
-          username
-        }
-        voteCount
-      }
-      createdAt
-      answers {
-        _id
-        body
-        upvotes {
-          username
-        }
-        downvotes {
-          username
-        }
-        voteCount
+  query ($page: Int) {
+    getPosts (page: $page) {
+      posts{
+        id
         createdAt
-        username
+        question {
+          username
+          body
+          tags {
+            id
+            name
+          }
+          title
+          commentCount
+        }
+        user
       }
+      totalPages
     }
   }
 `;

@@ -63,8 +63,12 @@ module.exports = gql`
     id: Int!
     name: String!
   }
+  type getPostsReturn {
+    posts: [Post]
+    totalPages: Int!
+  }
   type Query {
-    getPosts: [Post]
+    getPosts(page: Int): getPostsReturn
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
     getUserPost(userId: ID!): [Post]
@@ -86,7 +90,6 @@ module.exports = gql`
     updateImage(userId: ID!, fileId: ID!, file: Upload!): User!
   }
   type Subscription {
-    newPost: Post!
     newComment: Comment!
     newAnswer: Answer!
   }

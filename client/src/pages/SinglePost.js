@@ -38,7 +38,7 @@ const SinglePost = (props) => {
       }
     },
     onError: (error) => {
-      if (error.message === 'PostNotFound') {
+      if (error.graphQLErrors[0].extensions.code === 'POST_NOT_FOUND') {
         setPostDoesNotExist(true);
       }
     },
