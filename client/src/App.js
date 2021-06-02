@@ -20,15 +20,13 @@ function App() {
     <AuthProvider>
       <Router>
         <NavBar />
-        <Container style={{paddingTop: "2rem"}}>
           <Route exact path="/" component={Home} />
           <AuthRoute exact path="/login" component={Login} />
           <AuthRoute exact path="/register" component={Register} />
           <Route exact path="/posts/:postId" component={SinglePost} />
           <Route exact path="/createPost" component={CreatePost} />
           <Route exact path="/dashboard/:userId" component={Dashboard} />
-        </Container>
-      </Router>
+        </Router>
     </AuthProvider>
   );
 }

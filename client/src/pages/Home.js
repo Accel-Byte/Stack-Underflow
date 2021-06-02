@@ -42,7 +42,7 @@ function Home() {
       });
     },
   });
-  console.log( totalPages);
+  console.log(totalPages);
   useEffect(() => {
     refetch();
     return () => {};
@@ -52,46 +52,58 @@ function Home() {
     setCurrentPage(activePage);
   };
   return (
-    <Grid columns={3}>
-      <ToastContainer />
-      <Grid.Row className="page-title">
-        <h1>Recent Posts</h1>
-      </Grid.Row>
-      {user && (
-        <Grid.Row style={{ paddingLeft: '10rem', paddingRight: '10rem' }}>
-          <Button secondary as={Link} to={'/createPost'}>
-            Create Post
-          </Button>
-        </Grid.Row>
-      )}
-      <Loader active={loading} size="medium" inline="centered" />
-      <Transition.Group>
-        {posts &&
-          posts.map((post) => (
-            <Grid.Row
-              key={post.id}
-              style={{ marginBottom: 20, padding: '0px 10rem' }}
-            >
-              <PostCard post={post} />
-            </Grid.Row>
-          ))}
-      </Transition.Group>
-      <Grid.Row style={{ paddingLeft: '10rem', paddingRight: '10rem' }}>
-        <Pagination
-          defaultActivePage={currentPage}
-          ellipsisItem={totalPages < 5 ? null : {
-            content: <Icon name="ellipsis horizontal" />,
-            icon: true,
-          }} 
-          firstItem={{ content: <Icon name="angle double left" />, icon: true }}
-          lastItem={{ content: <Icon name="angle double right" />, icon: true }}
-          prevItem={{ content: <Icon name="angle left" />, icon: true }}
-          nextItem={{ content: <Icon name="angle right" />, icon: true }}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
-      </Grid.Row>
-    </Grid>
+    <>
+        <div class="h-14"></div>
+        <div class="bg-primary-light p-10 min-h-screen">
+        <div class="grid grid-cols-4 gap-4">
+          <div class="col-span-1 justify-self-center h-96 overflow-y-scroll scroll-1">
+            <div class="bg-card-dark py-8 px-10 text-center rounded-xl font-bold">
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-green-dark">
+                Mongodb
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-red-dark">
+                Rust
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+                GraphQL
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+                GraphQL
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+                GraphQL
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+                GraphQL
+              </div>
+              <hr class="border-gray-900" />
+              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+                GraphQL
+              </div>
+            </div>
+          </div>
+          <div class="col-span-2 justify-self-stretch">
+            {posts &&
+              posts.map((post) => (
+                  <PostCard post={post} />
+              ))}
+          </div>
+          <div class="col-span-1 justify-self-center">
+            <div class="bg-card-dark p-6 rounded-xl mb-2 text-white">
+              <div class="font-semibold">Featured Post</div>
+              <button class="mt-4 py-1 px-20 border-white border-2 rounded-lg">
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
