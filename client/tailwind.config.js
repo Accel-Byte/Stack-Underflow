@@ -11,7 +11,7 @@ module.exports = {
         'primary-light': '#1F1D2B',
         'nav-link-hover-dark': '#afffdf',
         'nav-link-hover-light': '#8167a9',
-        
+
         'card-dark': '#252836',
         'card-purple-dark': '#6A5CCC',
         'card-green-dark': '#22B07D',
@@ -19,6 +19,10 @@ module.exports = {
         'card-orange-dark': '#F19953',
         'card-blue-dark': '#2EAFF8',
         'card-pink-dark': '#ff449f',
+      },
+      animation: {
+        bounce200: 'bounce 10ms infinite 200ms',
+        bounce400: 'bounce 10ms infinite 400ms',
       },
       borderStyle: ['hover'],
       fontFamily: {
@@ -30,4 +34,4 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};

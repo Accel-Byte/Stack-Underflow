@@ -1,20 +1,14 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import {
-  Grid,
-  Transition,
-  Button,
-  Loader,
-  Pagination,
-  Icon,
-} from 'semantic-ui-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthContext } from '../context/auth';
 import PostCard from '../components/PostCard/HomeCard';
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
+import Pagination from '../components/Pagination/Pagination';
+import Loader from '../components/Loader/Loader';
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -48,55 +42,69 @@ function Home() {
     return () => {};
   }, [currentPage]);
 
-  const handlePageChange = (e, { activePage }) => {
-    setCurrentPage(activePage);
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
+
   return (
     <>
-        <div class="h-14"></div>
-        <div class="bg-primary-light p-10 min-h-screen">
-        <div class="grid grid-cols-4 gap-4">
-          <div class="col-span-1 justify-self-center h-96 overflow-y-scroll scroll-1">
-            <div class="bg-card-dark py-8 px-10 text-center rounded-xl font-bold">
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-green-dark">
+      <div className="h-14"></div>
+      <div className="bg-primary-light p-10 min-h-screen">
+        <div className="grid grid-cols-4 gap-4">
+          <div className="col-span-1 justify-self-center h-96 overflow-y-scroll scroll-1">
+            <div className="bg-card-dark py-8 px-10 text-center rounded-xl font-bold">
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-green-dark">
                 Mongodb
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-red-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-red-dark">
                 Rust
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
                 GraphQL
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
                 GraphQL
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
                 GraphQL
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
                 GraphQL
               </div>
-              <hr class="border-gray-900" />
-              <div class="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
+              <hr className="border-gray-900" />
+              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
                 GraphQL
               </div>
             </div>
           </div>
-          <div class="col-span-2 justify-self-stretch">
-            {posts &&
-              posts.map((post) => (
-                  <PostCard post={post} />
-              ))}
+          <div className="col-span-2 justify-self-stretch">
+            {loading ? (
+              <Loader/>
+            ) : (
+              <>
+                {' '}
+                <div>
+                  {posts &&
+                    posts.map((post) => <PostCard post={post} key={post.id} />)}
+                </div>
+                <Pagination
+                  itemsCount={3}
+                  pageSize={2}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
           </div>
-          <div class="col-span-1 justify-self-center">
-            <div class="bg-card-dark p-6 rounded-xl mb-2 text-white">
-              <div class="font-semibold">Featured Post</div>
-              <button class="mt-4 py-1 px-20 border-white border-2 rounded-lg">
+          <div className="col-span-1 justify-self-center">
+            <div className="bg-card-dark p-6 rounded-xl mb-2 text-white">
+              <div className="font-semibold">Featured Post</div>
+              <button className="mt-4 py-1 px-20 border-white border-2 rounded-lg">
                 Contact Us
               </button>
             </div>
