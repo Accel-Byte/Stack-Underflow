@@ -23,10 +23,29 @@ module.exports = {
       animation: {
         bounce200: 'bounce 10ms infinite 200ms',
         bounce400: 'bounce 10ms infinite 400ms',
+        bounce1: 'bounceDelay 1.4s ease-in-out -.32s both',
+        bounce2: 'bounceDelay 1.4s ease-in-out -.16s both',
+        bounce3: 'bounceDelay 1.4s ease-in-out  both',
+      },
+      keyframes: {
+        bounceDelay: {
+          '0%,100%,80%': { transform: 'scale(0)' },
+          '40%': { transform: 'scale(1)' },
+        },
+        rotation: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(359deg)' },
+        },
       },
       borderStyle: ['hover'],
       fontFamily: {
         poppins: 'Poppins',
+      },
+      height: {
+        '37rem': '37rem',
+      },
+      width: {
+        '99%': '99%',
       },
     },
   },

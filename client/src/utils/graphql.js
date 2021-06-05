@@ -15,10 +15,15 @@ export const FETCH_POSTS_QUERY = gql`
           }
           title
           commentCount
+          voteCount
+        }
+        answers {
+          _id
         }
         user
       }
       totalPages
+      totalPosts
     }
   }
 `;

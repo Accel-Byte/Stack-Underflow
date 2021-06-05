@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { ToastContainer, toast } from 'react-toastify';
@@ -13,10 +13,15 @@ import Loader from '../components/Loader/Loader';
 function Home() {
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [tags, setTags] = useState([]);
 
   const {
     loading,
-    data: { getPosts: { posts } = {}, getPosts: { totalPages } = 0 } = {},
+    data: {
+      getPosts: { posts } = {},
+      getPosts: { totalPages } = 0,
+      getPosts: { totalPosts } = 0,
+    } = {},
     refetch,
   } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
@@ -36,11 +41,34 @@ function Home() {
       });
     },
   });
-  console.log(totalPages);
+
   useEffect(() => {
     refetch();
     return () => {};
   }, [currentPage]);
+
+  useEffect(() => {
+    fetch('data/tags.json', {
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then((myJson) => {
+        let tempTags = [];
+        myJson.forEach((item, index) => {
+          tempTags.push({
+            data: item.name,
+            color: item.color,
+          });
+        });
+        setTags(tempTags);
+      });
+    return () => {};
+  }, []);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -48,43 +76,28 @@ function Home() {
 
   return (
     <>
-      <div className="h-14"></div>
-      <div className="bg-primary-light p-10 min-h-screen">
+      <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
         <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-1 justify-self-center h-96 overflow-y-scroll scroll-1">
-            <div className="bg-card-dark py-8 px-10 text-center rounded-xl font-bold">
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-green-dark">
-                Mongodb
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-red-dark">
-                Rust
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
-                GraphQL
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
-                GraphQL
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
-                GraphQL
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
-                GraphQL
-              </div>
-              <hr className="border-gray-900" />
-              <div className="hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl text-card-pink-dark">
-                GraphQL
-              </div>
+          <div className="col-span-1 justify-self-center h-37rem overflow-y-scroll scroll-1">
+            <div className="bg-white dark:bg-card-dark py-8 px-10 text-center rounded-xl font-bold transition duration-500">
+              {tags &&
+                tags.map((tag, i) => {
+                  return (
+                    <Fragment key={i}>
+                      <div
+                        className={`hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl ${tag.color}`}
+                      >
+                        {tag.data}
+                      </div>
+                      <hr className="dark:border-gray-900 border-gray-200" />
+                    </Fragment>
+                  );
+                })}
             </div>
           </div>
           <div className="col-span-2 justify-self-stretch">
             {loading ? (
-              <Loader/>
+              <Loader />
             ) : (
               <>
                 {' '}
@@ -93,10 +106,12 @@ function Home() {
                     posts.map((post) => <PostCard post={post} key={post.id} />)}
                 </div>
                 <Pagination
-                  itemsCount={3}
-                  pageSize={2}
+                  itemsCount={totalPages * 3}
+                  pageSize={3}
                   currentPage={currentPage}
                   onPageChange={handlePageChange}
+                  totalPosts={totalPosts}
+                  totalPages={totalPages}
                 />
               </>
             )}
@@ -114,5 +129,6 @@ function Home() {
     </>
   );
 }
+
 
 export default Home;

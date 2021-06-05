@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-const Pagination = ({ itemsCount, currentPage, pageSize, onPageChange }) => {
+const Pagination = ({
+  itemsCount,
+  currentPage,
+  pageSize,
+  onPageChange,
+  totalPosts,
+  totalPages,
+}) => {
   const pagesCount = Math.ceil(itemsCount / pageSize);
   if (pagesCount === 1) return null;
   const pages =
@@ -15,11 +22,11 @@ const Pagination = ({ itemsCount, currentPage, pageSize, onPageChange }) => {
       <div>
         <p className="text-sm text-gray-400">
           Showing
-          <span className="font-medium">1</span>
+          <span className="font-medium text-gray-300"> 1 </span>
           to
-          <span className="font-medium">10</span>
+          <span className="font-medium text-gray-300"> {totalPages} </span>
           of
-          <span className="font-medium">97</span>
+          <span className="font-medium text-gray-300"> {totalPosts} </span>
           results
         </p>
       </div>
@@ -29,7 +36,7 @@ const Pagination = ({ itemsCount, currentPage, pageSize, onPageChange }) => {
           aria-label="Pagination"
         >
           <button
-            className="relative inline-flex items-center px-2 py-2 rounded-r-md bg-card-dark text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none"
+            className="relative inline-flex items-center px-2 py-2 rounded-l-md bg-card-dark text-sm font-medium text-gray-300 hover:bg-gray-700 focus:outline-none"
             onClick={(e) => {
               e.preventDefault();
               onPageChange(1);
@@ -78,8 +85,10 @@ const Pagination = ({ itemsCount, currentPage, pageSize, onPageChange }) => {
               key={page}
               aria-current="page"
               className={`z-10  ${
-                page === currentPage ? 'text-pink-300 bg-gray-700' : 'text-gray-300 bg-card-dark'
-              }  relative inline-flex items-center px-4 py-2 text-sm font-medium cursor-pointer focus:outline-none`}
+                page === currentPage
+                  ? 'text-pink-300 bg-gray-700'
+                  : 'text-gray-300 bg-card-dark'
+              }  relative inline-flex items-center px-4 py-2 text-sm font-medium cursor-pointer focus:outline-none hover:bg-gray-700`}
               onClick={(e) => {
                 e.preventDefault();
                 onPageChange(page);
