@@ -8,7 +8,7 @@ const checkAuth = require('../../utils/check-auth');
 module.exports = {
   Query: {
     async getPosts(_, { page }) {
-      let perPage = 2;
+      let perPage = 4;
       page = Math.abs(page) || 1; // if pageNumber is not passed
       page = Math.max(1, page);
 
@@ -19,7 +19,8 @@ module.exports = {
         const totalPostCount = await Post.count();
         const result = {
           posts,
-          totalPages : Math.ceil(totalPostCount / perPage)
+          totalPages : Math.ceil(totalPostCount / perPage),
+          totalPosts : totalPostCount
         }
         return result;
       } catch (err) {
