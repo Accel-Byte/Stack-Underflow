@@ -13,6 +13,7 @@ import Loader from '../components/Loader/Loader';
 function Home() {
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
+  const [currenttag, setCurrentTag] = useState('');
   const [tags, setTags] = useState([]);
 
   const {
@@ -26,6 +27,7 @@ function Home() {
   } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       page: currentPage,
+      tag: currenttag,
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
@@ -45,7 +47,7 @@ function Home() {
   useEffect(() => {
     refetch();
     return () => {};
-  }, [currentPage]);
+  }, [currentPage, currenttag]);
 
   useEffect(() => {
     fetch('data/tags.json', {
@@ -73,6 +75,10 @@ function Home() {
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+  
+  const handleTagChange = (tag) => {
+    setCurrentTag(tag);
+  };
 
   return (
     <>
@@ -86,6 +92,9 @@ function Home() {
                     <Fragment key={i}>
                       <div
                         className={`hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer py-4 px-8 rounded-xl ${tag.color}`}
+                        onClick={(e) => {
+                          handleTagChange(e.target.textContent);
+                        }}
                       >
                         {tag.data}
                       </div>
