@@ -7,21 +7,35 @@ const checkAuth = require('../../utils/check-auth');
 
 module.exports = {
   Query: {
-    async getPosts(_, { page }) {
+    async getPosts(_, { page, tag }) {
       let perPage = 4;
       page = Math.abs(page) || 1; // if pageNumber is not passed
       page = Math.max(1, page);
-
+      console.log(tag);
       try {
-        const posts = await Post.find()
-          .limit(perPage)
-          .skip(perPage * (page - 1));
-        const totalPostCount = await Post.count();
+        let totalPostCount;
+        let posts;
+        if (tag) {
+          page = 1;
+          posts = await Post.find({
+            'question.tags': { $elemMatch: { name: tag } },
+          })
+            .limit(perPage)
+            .skip(perPage * (page - 1));
+          totalPostCount = await Post.find({
+            'question.tags': { $elemMatch: { name: tag } },
+          }).count();
+        } else {
+          posts = await Post.find()
+            .limit(perPage)
+            .skip(perPage * (page - 1));
+          totalPostCount = await Post.count();
+        }
         const result = {
           posts,
-          totalPages : Math.ceil(totalPostCount / perPage),
-          totalPosts : totalPostCount
-        }
+          totalPages: Math.ceil(totalPostCount / perPage),
+          totalPosts: totalPostCount,
+        };
         return result;
       } catch (err) {
         throw new Error(err);

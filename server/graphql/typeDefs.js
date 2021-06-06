@@ -69,7 +69,7 @@ module.exports = gql`
     totalPosts: Int!
   }
   type Query {
-    getPosts(page: Int): getPostsReturn
+    getPosts(page: Int, tag: String): getPostsReturn
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
     getUserPost(userId: ID!): [Post]
