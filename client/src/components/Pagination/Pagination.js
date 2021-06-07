@@ -15,7 +15,7 @@ const Pagination = ({
   const pages =
     currentPage <= 3
       ? _.range(1, Math.min(6, pagesCount + 1))
-      : _.range(currentPage - 2, currentPage + 3);
+      : _.range(currentPage - 2, Math.min(currentPage + 3, totalPages + 1));
 
   return (
     <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between mt-4">
