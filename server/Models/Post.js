@@ -32,7 +32,7 @@ const commentSchema = Schema({
 
 const tagSchema = Schema({
   id: Number,
-  name: String
+  name: String,
 });
 
 const questionSchema = Schema({
@@ -67,6 +67,7 @@ const postSchema = new Schema({
     ref: 'users',
   },
   answers: [answerSchema],
+  featured: { type: Boolean, default: false },
 });
 
 module.exports = model('Post', postSchema);
