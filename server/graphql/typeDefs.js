@@ -43,6 +43,7 @@ module.exports = gql`
     question: Question!
     answers: [Answer]!
     user: ID!
+    featured: Boolean!
   }
   type User {
     id: ID!
@@ -69,7 +70,7 @@ module.exports = gql`
     totalPosts: Int!
   }
   type Query {
-    getPosts(page: Int, tag: String): getPostsReturn
+    getPosts(page: Int, tag: String, search: String, featured: Boolean!): getPostsReturn
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
     getUserPost(userId: ID!): [Post]

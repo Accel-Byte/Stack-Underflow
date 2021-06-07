@@ -7,11 +7,10 @@ const checkAuth = require('../../utils/check-auth');
 
 module.exports = {
   Query: {
-    async getPosts(_, { page, tag }) {
+    async getPosts(_, { page, tag, search, featured }) {
       let perPage = 4;
       page = Math.abs(page) || 1; // if pageNumber is not passed
       page = Math.max(1, page);
-      console.log(tag);
       try {
         let totalPostCount;
         let posts;
@@ -19,17 +18,31 @@ module.exports = {
           page = 1;
           posts = await Post.find({
             'question.tags': { $elemMatch: { name: tag } },
+            featured: featured,
           })
             .limit(perPage)
             .skip(perPage * (page - 1));
           totalPostCount = await Post.find({
             'question.tags': { $elemMatch: { name: tag } },
+            featured: featured,
           }).count();
-        } else {
-          posts = await Post.find()
+        } else if (search) {
+          page = 1;
+          posts = await Post.find({
+            'question.title': { $regex: search, $options: 'i' },
+            featured: featured,
+          })
             .limit(perPage)
             .skip(perPage * (page - 1));
-          totalPostCount = await Post.count();
+          totalPostCount = await Post.find({
+            'question.title': { $regex: search, $options: 'i' },
+            featured: featured,
+          }).count();
+        } else {
+          posts = await Post.find({ featured: featured })
+            .limit(perPage)
+            .skip(perPage * (page - 1));
+          totalPostCount = await Post.find({ featured: featured }).count();
         }
         const result = {
           posts,
@@ -208,6 +221,5 @@ module.exports = {
       }
     },
   },
-  Subscription: {
-  },
+  Subscription: {},
 };

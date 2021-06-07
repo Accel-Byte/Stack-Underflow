@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const FETCH_POSTS_QUERY = gql`
-  query ($page: Int, $tag: String) {
-    getPosts (page: $page, tag: $tag) {
+  query ($page: Int, $tag: String, $search: String, $featured: Boolean!) {
+    getPosts (page: $page, tag: $tag, search: $search, featured: $featured) {
       posts{
         id
         createdAt
