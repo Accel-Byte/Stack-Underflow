@@ -19,6 +19,9 @@ module.exports = {
         'card-orange-dark': '#F19953',
         'card-blue-dark': '#2EAFF8',
         'card-pink-dark': '#ff449f',
+        'login-button-dark': '#18DEB7',
+        'login-button-dark-hover': '#232931',
+        
       },
       animation: {
         bounce200: 'bounce 10ms infinite 200ms',

@@ -5,6 +5,23 @@
 @tailwind utilities;
 
 @layer base{
+  ::file-selector-button {
+    @apply text-gray-300 bg-card-dark hover:bg-gray-700
+      font-medium text-sm cursor-pointer
+      border-0 border-r border-solid border-gray-900
+      py-2.5 pl-8 pr-4 focus:outline-none;
+    margin-inline-start: -1rem;
+    margin-inline-end: 1rem;
+  }
+  ::-webkit-file-upload-button {
+    @apply text-gray-300 bg-card-dark hover:bg-gray-700
+      font-medium text-sm cursor-pointer
+      border-0 border-r border-solid border-gray-900
+      py-2.5 pl-8 pr-4 focus:outline-none;
+    margin-inline-start: -1rem;
+    margin-inline-end: 1rem;
+  }
+  
   ::selection {
     background: #80CBC4;
     color: black;
