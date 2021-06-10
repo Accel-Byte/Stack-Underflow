@@ -6,7 +6,7 @@ import React, {
   useRef,
 } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, NetworkStatus } from '@apollo/client';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -33,6 +33,7 @@ function Home() {
       getPosts: { totalPosts } = 0,
     } = {},
     refetch,
+    networkStatus,
   } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       page: currentPage,
@@ -98,7 +99,9 @@ function Home() {
     const search = searchRef.current.value;
     setCurrentSearch(search);
   };
-
+  if (loading) {
+    return <Loader mainLoader={true} />;
+  }
   return (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
@@ -169,8 +172,8 @@ function Home() {
                 Featured Posts
               </button>
             </div>
-            {loading ? (
-              <Loader />
+            {networkStatus === NetworkStatus.refetch ? (
+              <Loader mainLoader={false} />
             ) : (
               <>
                 {' '}

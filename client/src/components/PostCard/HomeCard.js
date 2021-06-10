@@ -60,7 +60,7 @@ function PostCard({
             {question &&
               question.tags.slice(0, 6).map((tag, index) => {
                 return (
-                  <span className={`mr-1 ${color[index]}`}>
+                  <span className={`mr-1 ${color[index]}`} key={tag.id}>
                     #{tag.name} &nbsp;
                   </span>
                 );

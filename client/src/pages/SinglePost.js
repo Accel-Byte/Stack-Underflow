@@ -127,6 +127,7 @@ const SinglePost = (props) => {
   }
   let answers = [];
   if (getPost) {
+    console.log(getPost.question.body);
     answers = getPost.answers;
     answers = answers
       .slice()
