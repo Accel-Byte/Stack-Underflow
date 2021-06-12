@@ -19,11 +19,12 @@ import Loader from '../components/Loader/Loader';
 function Home() {
   const { user } = useContext(AuthContext);
   const [currentPage, setCurrentPage] = useState(1);
-  const [currenttag, setCurrentTag] = useState('');
+  const [currentTag, setCurrentTag] = useState('');
   const [currentSearch, setCurrentSearch] = useState('');
   const [featured, setFeatured] = useState(false);
   const [tags, setTags] = useState([]);
   const searchRef = useRef(null);
+  const notInitialRender = useRef(false);
 
   const {
     loading,
@@ -37,7 +38,7 @@ function Home() {
   } = useQuery(FETCH_POSTS_QUERY, {
     variables: {
       page: currentPage,
-      tag: currenttag,
+      tag: currentTag,
       search: currentSearch,
       featured: featured,
     },
@@ -57,9 +58,13 @@ function Home() {
   });
 
   useEffect(() => {
-    refetch();
+    if (notInitialRender.current) {
+      refetch();
+    } else {
+      notInitialRender.current = true;
+    }
     return () => {};
-  }, [currentPage, currenttag, currentSearch, featured]);
+  }, [currentPage, currentTag, currentSearch, featured]);
 
   useEffect(() => {
     fetch('data/tags.json', {
@@ -99,9 +104,10 @@ function Home() {
     const search = searchRef.current.value;
     setCurrentSearch(search);
   };
-  if (loading) {
+  if (networkStatus === NetworkStatus.loading) {
     return <Loader mainLoader={true} />;
   }
+  
   return (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
@@ -115,7 +121,7 @@ function Home() {
                       <div
                         className={`hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer py-4 px-6 rounded-xl ${
                           tag.color
-                        } ${currenttag === tag.data ? 'bg-gray-700' : null}`}
+                        } ${currentTag === tag.data ? 'bg-gray-700' : null}`}
                         onClick={(e) => {
                           console.log(e.target.textContent);
                           handleTagChange(e.target.textContent);
