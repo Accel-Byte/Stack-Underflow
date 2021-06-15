@@ -72,12 +72,27 @@ module.exports = {
         );
       }
     },
-    async getUserPost(_, { userId }) {
+    async getUserPost(_, { userId, page }) {
+      let perPage = 4;
+      page = Math.abs(page) || 1; // if pageNumber is not passed
+      page = Math.max(1, page);
       try {
         if (ObjectID.isValid(userId)) {
-          const posts = await Post.find({ user: new ObjectID(userId) });
+          const posts = await Post.find({ user: new ObjectID(userId) })
+            .limit(perPage)
+            .skip(perPage * (page - 1));
+          const totalPostCount = await Post.find({
+            user: new ObjectID(userId),
+          }).count();
+
           if (posts) {
-            return posts;
+            const result = {
+              posts,
+              totalPages: Math.ceil(totalPostCount / perPage),
+              totalPosts: totalPostCount,
+            };
+            return result;
+            
           } else {
             throw new Error('Post not found');
           }

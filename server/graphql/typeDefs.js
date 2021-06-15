@@ -73,7 +73,7 @@ module.exports = gql`
     getPosts(page: Int, tag: String, search: String, featured: Boolean!): getPostsReturn
     getPost(postId: ID!): Post
     getUser(userId: ID!): User
-    getUserPost(userId: ID!): [Post]
+    getUserPost(userId: ID!, page: Int): getPostsReturn
     getImage(fileId: ID!): String
   }
   type Mutation {
