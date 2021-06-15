@@ -2,6 +2,7 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
+  useLocation,
   Switch,
 } from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
@@ -14,6 +15,7 @@ import { AuthProvider } from './context/auth';
 import AuthRoute from './utils/authRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
                     <Route exact path="/" component={Home} />
                     <AuthRoute exact path="/register" component={Register} />
                     <AuthRoute exact path="/login" component={Login} />
+                    <Route exact path="/dashboard/:userId" component={Dashboard} />
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>

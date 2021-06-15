@@ -1,33 +1,37 @@
-import React, { useState } from 'react';
-import { useQuery, gql } from '@apollo/client';
-import {
-  Grid,
-  Transition,
-  Divider,
-  Image,
-  Card,
-  Loader,
-} from 'semantic-ui-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useQuery, gql, NetworkStatus } from '@apollo/client';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import DashboardCard from '../components/PostCard/DashboardCard';
-import UpdateImage from '../components/UpdateImage';
-import NothingHere from '../components/NothingHere/NothingHere';
+import PostCard from '../components/PostCard/HomeCard';
+import Pagination from '../components/Pagination/Pagination';
+import Loader from '../components/Loader/Loader';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
   const [open, setOpen] = useState(false);
   const [userNotFound, setUserNotFound] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const notInitialRender = useRef(false);
 
   const {
     loading,
-    data: { getUser: user, getUserPost: posts } = {},
+    data: {
+      getUser: user,
+      getUserPost: { posts } = {},
+      getUserPost: { totalPages } = 0,
+      getUserPost: { totalPosts } = 0,
+    } = {},
+    refetch,
+    networkStatus,
   } = useQuery(FETCH_DASHBOARD_DATA, {
     variables: {
       userId,
+      page: currentPage
     },
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'cache-and-network',
     onError: (err) => {
       console.log(err.message);
       if (err.message.includes('UserNotFound')) {
@@ -46,6 +50,15 @@ const Dashboard = (props) => {
     },
   });
 
+  useEffect(() => {
+    if (notInitialRender.current) {
+      refetch();
+    } else {
+      notInitialRender.current = true;
+    }
+    return () => {};
+  }, [currentPage]);
+
   const { data: { getImage: image } = {}, loading: imageLoading } = useQuery(
     FETCH_IMAGE_QUERY,
     {
@@ -63,97 +76,43 @@ const Dashboard = (props) => {
     });
   }
 
-  return userNotFound ? (
-    <NothingHere />
-  ) : (
+  
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  if (networkStatus === NetworkStatus.loading) {
+    return <Loader mainLoader={true} />;
+  }
+
+
+  return (
     <>
-      <ToastContainer />
-      <Grid>
-        <Grid.Column width={3}>
-          <Grid.Row>
-            <Card>
-              <Loader
-                active={imageLoading}
-                size="medium"
-                inline="centered"
-                indeterminate
-              >
-                Fetching Data
-              </Loader>
-              <Image
-                src={image && 'data:image/jpeg;base64,' + image}
-                label={{
-                  content: 'Community',
-                  icon: 'users',
-                  color: 'purple',
-                  ribbon: true,
-                }}
-                wrapped
-                ui={false}
-              />
-              <Card.Content>
-                <Card.Header>{user ? user.username : ''}</Card.Header>
-                <Card.Meta>
-                  Joined in {moment(user ? user.createdAt : '').year()}
-                </Card.Meta>
-                <Card.Description>
-                  Daniel is a comedian living in Nashville.
-                </Card.Description>
-              </Card.Content>
-              <Card.Content extra style={{ margin: '0 auto' }}>
-                <UpdateImage
-                  open={open}
-                  setOpen={setOpen}
-                  userId={userId}
-                  fileId={user?.fileId}
+      <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
+        <div className="grid grid-cols-4 gap-4">
+          <div className="col-span-2 justify-self-stretch">
+          {networkStatus === NetworkStatus.refetch ? (
+              <Loader mainLoader={false} />
+            ) : (
+              <>
+                {' '}
+                <div>
+                  {posts &&
+                    posts.map((post) => <PostCard post={post} key={post.id} />)}
+                </div>
+                <Pagination
+                  itemsCount={totalPages * 3}
+                  pageSize={3}
+                  currentPage={currentPage}
+                  onPageChange={handlePageChange}
+                  totalPosts={totalPosts}
+                  totalPages={totalPages}
                 />
-              </Card.Content>
-            </Card>
-          </Grid.Row>
-        </Grid.Column>
-        <Grid.Column width={13}>
-          <Grid.Row>
-            <Grid padded columns="equal" divided>
-              <Grid.Column>
-                <Grid.Row>
-                  <h2>Questions</h2>
-                </Grid.Row>
-                <Grid.Row>
-                  <h2>{posts ? posts.length : ''}</h2>
-                </Grid.Row>
-              </Grid.Column>
-              <Grid.Column>
-                <Grid.Row>
-                  <h2>Votes</h2>
-                </Grid.Row>
-                <Grid.Row>
-                  <h2>{votes}</h2>
-                </Grid.Row>
-              </Grid.Column>
-            </Grid>
-          </Grid.Row>
-          <Grid.Row>
-            <Divider />
-          </Grid.Row>
-          <Grid.Row className="page-title">
-            <h1>All Posts</h1>
-          </Grid.Row>
-          <Grid.Row>
-            <Loader active={loading} size="medium" inline="centered" />
-            <Transition.Group>
-              {posts &&
-                posts.map((post) => (
-                  <Grid.Row
-                    key={post.id}
-                    style={{ marginBottom: 20, padding: '0px 10rem' }}
-                  >
-                    <DashboardCard post={post} />
-                  </Grid.Row>
-                ))}
-            </Transition.Group>
-          </Grid.Row>
-        </Grid.Column>
-      </Grid>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
@@ -161,29 +120,41 @@ const Dashboard = (props) => {
 export default Dashboard;
 
 const FETCH_DASHBOARD_DATA = gql`
-  query DashboardData($userId: ID!) {
+  query DashboardData($userId: ID!, $page: Int) {
     getUser(userId: $userId) {
       username
       email
       createdAt
       fileId
     }
-    getUserPost(userId: $userId) {
-      id
-      createdAt
-      question {
-        commentCount
-        username
-        body
-        title
-        voteCount
+    getUserPost(userId: $userId, page: $page) {
+      posts {
+        id
+        createdAt
+        question {
+          username
+          body
+          tags {
+            id
+            name
+          }
+          title
+          commentCount
+          voteCount
+        }
+        answers {
+          _id
+        }
+        user
       }
+      totalPages
+      totalPosts
     }
   }
 `;
 
 const FETCH_IMAGE_QUERY = gql`
-  query($fileId: ID!) {
+  query ($fileId: ID!) {
     getImage(fileId: $fileId)
   }
 `;
