@@ -4,6 +4,7 @@ module.exports = {
   theme: {
     boxShadow: {
       'nav-shadow': '0 10px 30px 0 rgba(138, 155, 165, 0.15)',
+      'profile-card-shadow': '0px 10px 20px -10px rgba(0,0,0, 0.75)'
     },
     extend: {
       colors: {
@@ -21,7 +22,9 @@ module.exports = {
         'card-pink-dark': '#ff449f',
         'login-button-dark': '#18DEB7',
         'login-button-dark-hover': '#232931',
-        
+        'profile-card-dark': '#231E39',
+        'profile-tag-background-dark': '#FEBB0B',
+        'profile-button-dark': '#03BFCB',
       },
       animation: {
         bounce200: 'bounce 10ms infinite 200ms',
