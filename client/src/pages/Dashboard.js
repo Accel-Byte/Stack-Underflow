@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import PostCard from '../components/PostCard/HomeCard';
 import Pagination from '../components/Pagination/Pagination';
 import Loader from '../components/Loader/Loader';
+import UpdateImage from '../components/UpdateImage';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
@@ -93,11 +94,18 @@ const Dashboard = (props) => {
               <span className="absolute bg-profile-tag-background-dark text-gray-900 top-6 left-6 rounded-sm px-4 py-0 text-base font-semibold">
                 PRO
               </span>
-              <img
-                className="border border-solid border-blue-400 rounded-full p-2 inline w-36 h-36"
-                src={image && 'data:image/jpeg;base64,' + image}
-                alt="user"
-              />
+              {image ? (
+                <img
+                  className="border border-solid border-blue-400 rounded-full p-2 inline w-36 h-36"
+                  src={'data:image/jpeg;base64,' + image}
+                  alt="user"
+                />
+              ) : (
+                <div className="mx-20 my-14">
+                  <div className="spinner"></div>
+                </div>
+              )}
+
               <h3 className="mt-2 mx-0 text-2xl">
                 {user ? user.username : ''}
               </h3>
@@ -109,9 +117,7 @@ const Dashboard = (props) => {
                 Architecto cum aliquam
               </p>
               <div className="mt-5">
-                <button className="bg-profile-button-dark text-gray-900 border border-solid border-profile-button-dark rounded-md py-2 px-6 font-semibold focus:outline-none">
-                  Change Profile
-                </button>
+                <UpdateImage userId={userId} fileId={user?.fileId} />
               </div>
             </div>
           </div>
