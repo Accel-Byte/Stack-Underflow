@@ -78,68 +78,88 @@ const UpdateImage = ({ userId, fileId }) => {
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <div className="inline-block align-bottom bg-card-dark rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full border-2 border-yellow-400">
-                <div className="bg-card-dark px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="sm:flex sm:items-start">
-                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                      <Dialog.Title
-                        as="h3"
-                        className="text-2xl leading-6 font-medium text-gray-100 pb-2"
-                      >
-                        Upload Image
-                      </Dialog.Title>
-                      <div className="w-full">
-                        <ImageUploader
-                          withIcon={false}
-                          withPreview={true}
-                          onChange={onDrop}
-                          imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                          maxFileSize={5242880}
-                          singleImage={true}
-                          className="w-27rem"
-                          fileContainerStyle={{
-                            background: '#374151',
-                            color: 'white',
-                          }}
-                          label="Max file size : 5mb &nbsp;&nbsp;&nbsp;&nbsp; Accepted : jpg | webp | png"
-                          labelStyles={{
-                            fontSize: '16px',
-                          }}
-                          buttonStyles={{
-                            background: '#818CF8',
-                            color: 'black',
-                            fontWeight: "500",
-                          }}
-                          buttonText="Choose image"
-                          errorStyle={{
-                            color:"#F87171",
-                            fontSize: "14px",
-                            fontWeight: "500",
-                            marginTop: "8px"
-                          }}
-                        />
+                {loading ? (
+                  <div className="my-8">
+                    <div
+                      className="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"
+                      style={{
+                        borderTopColor: '#3498db',
+                        animation: 'spinner 1.5s linear infinite',
+                      }}
+                    ></div>
+                    <h2 class="text-center text-white text-xl font-semibold w-full">
+                      Loading...
+                    </h2>
+                    <p class="w-full text-center text-white">
+                      This may take a few seconds
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="bg-card-dark px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                      <div className="sm:flex sm:items-start">
+                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                          <Dialog.Title
+                            as="h3"
+                            className="text-2xl leading-6 font-medium text-gray-100 pb-2"
+                          >
+                            Upload Image
+                          </Dialog.Title>
+                          <div className="w-full">
+                            <ImageUploader
+                              withIcon={false}
+                              withPreview={true}
+                              onChange={onDrop}
+                              imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                              maxFileSize={5242880}
+                              singleImage={true}
+                              className="w-27rem"
+                              fileContainerStyle={{
+                                background: '#374151',
+                                color: 'white',
+                              }}
+                              label="Max file size : 5mb &nbsp;&nbsp;&nbsp;&nbsp; Accepted : jpg | webp | png"
+                              labelStyles={{
+                                fontSize: '16px',
+                              }}
+                              buttonStyles={{
+                                background: '#818CF8',
+                                color: 'black',
+                                fontWeight: '500',
+                              }}
+                              buttonText="Choose image"
+                              errorStyle={{
+                                color: '#F87171',
+                                fontSize: '14px',
+                                fontWeight: '500',
+                                marginTop: '8px',
+                              }}
+                            />
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-                <div className="bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <button
-                    type="button"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={() => {
-                      updateImage();
-                    }}
-                    disabled
-                  >
-                    Upload
-                  </button>
-                  <button
-                  type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setOpen(false)}
-                >
-                  Cancel
-                </button>
-                </div>
+                    <div className="bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                      <button
+                        type="button"
+                        className="disabled:opacity-20 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
+                        onClick={() => {
+                          updateImage();
+                        }}
+                        disabled={file ? file === null : false}
+                      >
+                        Upload
+                      </button>
+                      <button
+                        type="button"
+                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm"
+                        onClick={() => setOpen(false)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </Transition.Child>
           </div>
