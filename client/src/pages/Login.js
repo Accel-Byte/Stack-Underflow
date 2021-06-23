@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 
@@ -28,6 +29,7 @@ function Login(props) {
   function loginUserCallback() {
     loginUser();
   }
+  let circleCommonClasses = 'h-3 w-3 bg-card-dark rounded-full';
 
   return (
     <div class="bg-primary-light relative min-h-screen antialiased font-poppins pt-24">
@@ -71,7 +73,21 @@ function Login(props) {
                     />
                   </div>
                   <button class="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark">
-                    Login
+                    {loading ? (
+                      <div className="flex justify-center items-center py-2">
+                        <div
+                          className={`${circleCommonClasses} mr-1 animate-bounce1`}
+                        ></div>
+                        <div
+                          className={`${circleCommonClasses} mr-1 animate-bounce2`}
+                        ></div>
+                        <div
+                          className={`${circleCommonClasses} animate-bounce3`}
+                        ></div>
+                      </div>
+                    ) : (
+                      'Login'
+                    )}
                   </button>
                   {Object.keys(errors).length > 0 && (
                     <div class="flex justify-start mt-3 p-1">
@@ -103,13 +119,13 @@ function Login(props) {
                 </div>
               </form>
               <div class="text-sm sm:hidden font-semibold py-6 flex justify-center">
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   class="text-black font-normal border-b-2 border-gray-200 hover:border-blue-500"
                 >
                   You're already member?
                   <span class="text-black font-semibold"> Login </span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

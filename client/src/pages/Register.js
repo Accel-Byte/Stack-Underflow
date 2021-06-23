@@ -81,6 +81,8 @@ function Register(props) {
     }
   }
 
+  let circleCommonClasses = 'h-3 w-3 bg-card-dark rounded-full';
+
   return (
     <div class="bg-primary-light relative min-h-screen antialiased font-poppins pt-24">
       <div class="max-w-md mx-auto px-6">
@@ -177,7 +179,21 @@ function Register(props) {
                     </div>
                   </div>
                   <button class="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark">
-                    Register
+                    {loading ? (
+                      <div className="flex justify-center items-center py-2">
+                        <div
+                          className={`${circleCommonClasses} mr-1 animate-bounce1`}
+                        ></div>
+                        <div
+                          className={`${circleCommonClasses} mr-1 animate-bounce2`}
+                        ></div>
+                        <div
+                          className={`${circleCommonClasses} animate-bounce3`}
+                        ></div>
+                      </div>
+                    ) : (
+                      'Register'
+                    )}
                   </button>
                   {Object.keys(errors).length > 0 && (
                     <div class="flex justify-start mt-3 p-1">
