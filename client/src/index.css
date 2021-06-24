@@ -5,6 +5,16 @@
 @tailwind utilities;
 
 @layer base{
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-thumb{
+    background-color: #374151;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-track{
+    background: #1F1D2B;
+  }
   ::file-selector-button {
     @apply text-gray-300 bg-card-dark hover:bg-gray-700
       font-medium text-sm cursor-pointer

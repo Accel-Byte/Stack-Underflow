@@ -104,10 +104,11 @@ function Home() {
     const search = searchRef.current.value;
     setCurrentSearch(search);
   };
+
   if (networkStatus === NetworkStatus.loading) {
     return <Loader mainLoader={true} />;
   }
-  
+
   return (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
@@ -199,6 +200,12 @@ function Home() {
             )}
           </div>
           <div className="col-span-1 justify-self-center">
+            <div className="bg-card-dark p-6 rounded-xl mb-2 text-white">
+              <div className="font-semibold">New Post</div>
+              <button className="mt-4 py-1 px-20 border-white border-2 rounded-lg">
+                Create Post
+              </button>
+            </div>
             <div className="bg-card-dark p-6 rounded-xl mb-2 text-white">
               <div className="font-semibold">Featured Post</div>
               <button className="mt-4 py-1 px-20 border-white border-2 rounded-lg">
