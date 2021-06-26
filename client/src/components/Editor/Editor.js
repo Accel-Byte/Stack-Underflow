@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Button } from 'semantic-ui-react';
+import './Editor.css'
 
 const Editor = ({ loading, editorText, handleChange }) => {
   
@@ -55,16 +55,11 @@ const Editor = ({ loading, editorText, handleChange }) => {
           theme="snow"
           value={editorText}
           onChange={handleChange}
+          style={{
+            outline: "none",
+            border: "none"
+          }}
         />
-        <Button
-          content="Submit"
-          icon="telegram plane"
-          loading={loading}
-          floated="right"
-          labelPosition="right"
-          style={{ margin: '0.8rem 0 0 0' }}
-          secondary
-        ></Button>
     </div>
   );
 }

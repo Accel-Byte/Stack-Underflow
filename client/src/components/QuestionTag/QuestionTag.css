@@ -1,8 +1,12 @@
 .react-tags {
   position: relative;
   padding: 6px 0 0 6px;
-  border: 1px solid #D1D1D1;
+  border: 1px solid #111827;
   border-radius: 1px;
+  
+  background-color: #252836;
+  border-radius: 0.5rem;
+  color: #E5E7EB;
 
   /* shared font styles */
   font-size: 1em;
@@ -13,7 +17,6 @@
 }
 
 .react-tags.is-focused {
-  border-color: #B1B1B1;
 }
 
 .react-tags__selected {
@@ -23,11 +26,13 @@
 .react-tags__selected-tag {
   display: inline-block;
   box-sizing: border-box;
-  margin: 0 6px 6px 0;
-  padding: 6px 8px;
-  border: 1px solid #D1D1D1;
-  border-radius: 2px;
-  background: #F1F1F1;
+  margin: 0 8px 6px 0;
+  padding: 6px 8px 6px 10px;
+
+  background: #325F4C;
+  border-radius: 0.5rem;
+  color: #31BA64;
+  font-weight: 500;
 
   /* match the font styles */
   font-size: inherit;
@@ -36,8 +41,13 @@
 
 .react-tags__selected-tag:after {
   content: '\2715';
-  color: #AAA;
-  margin-left: 8px;
+  color: #325F4C;
+  background-color: #31BA64;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: bolder;
+  padding: 2px 5px;
+  margin-left: 6px;
 }
 
 .react-tags__selected-tag:hover,
@@ -66,6 +76,8 @@
 }
 
 .react-tags__search-input {
+  background-color: transparent !important;
+
   /* prevent autoresize overflowing the container */
   max-width: 100% !important;
 
@@ -89,6 +101,7 @@
   top: 100%;
   left: 0;
   width: 100%;
+  color: #111827;
 }
 
 @media screen and (min-width: 30em) {
@@ -101,32 +114,33 @@
 
 .react-tags__suggestions ul {
   margin: 4px -1px;
-  padding: 0;
+  padding: 10px;
   list-style: none;
-  background: white;
-  border: 1px solid #D1D1D1;
-  border-radius: 2px;
+  background: #323741;
+  color: #99A1B2;
+  border-radius: 0.5rem;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
-
 .react-tags__suggestions li {
-  border-bottom: 1px solid #ddd;
+  border-radius: 0.3rem;  
   padding: 6px 8px;
 }
 
 .react-tags__suggestions li mark {
-  text-decoration: underline;
   background: none;
   font-weight: 600;
+  color: #D2D3D4;
 }
 
 .react-tags__suggestions li:hover {
   cursor: pointer;
-  background: #eee;
+  background: #23272e;
+  color: #D2D3D4;
 }
 
 .react-tags__suggestions li.is-active {
-  background: #b7cfe0;
+  background: #23272e;
+  color: #D2D3D4;
 }
 
 .react-tags__suggestions li.is-disabled {

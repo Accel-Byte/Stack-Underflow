@@ -1,0 +1,44 @@
+.ql-toolbar .ql-stroke {
+    fill: none;
+    stroke: #fff;
+}
+
+.ql-toolbar .ql-fill {
+    fill: #fff;
+    stroke: none;
+}
+
+.ql-toolbar .ql-picker {
+    color: #fff;
+}
+
+.ql-toolbar .ql-even {
+    color: #fff;
+}
+
+.ql-toolbar .ql-picker-options {
+    background-color: #252836;
+}
+
+.quill .ql-editor {
+    color: white;
+}
+
+.ql-editor {
+    min-height: 10rem;
+}
+
+.ql-editor blockquote {
+    color: #000;
+}
+
+.ql-snow .ql-editor pre.ql-syntax {
+    background-color: #eee !important;
+    color: #000 !important;
+    overflow: visible;
+}
+
+.ql-syntax {
+    background-color: #eee !important;
+    padding: 0.8rem 0.8rem 0.8rem 1rem;
+}
