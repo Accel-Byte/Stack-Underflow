@@ -16,6 +16,7 @@ import AuthRoute from './utils/authRoute';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import CreatePost from './pages/createPost';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
                     <Route exact path="/" component={Home} />
                     <AuthRoute exact path="/register" component={Register} />
                     <AuthRoute exact path="/login" component={Login} />
+                    <Route exact path="/createPost" component={CreatePost} />
                     <Route exact path="/dashboard/:userId" component={Dashboard} />
                   </Switch>
                 </CSSTransition>

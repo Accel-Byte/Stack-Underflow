@@ -46,7 +46,7 @@ const Editor = ({ loading, editorText, handleChange }) => {
     'formula',
     'video',
   ];
-  
+
   return (
     <div>
         <ReactQuill

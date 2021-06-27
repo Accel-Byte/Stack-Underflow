@@ -186,7 +186,11 @@ function Home() {
                 {' '}
                 <div>
                   {posts &&
-                    posts.map((post) => <PostCard post={post} key={post.id} />)}
+                    posts.map((post) => (
+                      <div key={post.id}>
+                        <PostCard post={post} key={post.id} />
+                      </div>
+                    ))}
                 </div>
                 <Pagination
                   itemsCount={totalPages * 3}

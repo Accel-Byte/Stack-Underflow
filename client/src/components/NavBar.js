@@ -19,7 +19,7 @@ const NavBar = () => {
 
   const navBar = (
     <>
-      <nav className="fixed w-screen text-primary-light dark:text-white shadow-nav-shadow font-medium font-poppins dark:bg-primary-light z-50">
+      <nav className="fixed w-screen text-primary-light dark:text-white shadow-nav-shadow font-medium font-poppins bg-white dark:bg-primary-light z-50 transition duration-500">
         <div className="md:flex md:justify-between px-16">
           <div className="py-2 md:py-4 px-4 text-center">
             <Link to="/">
@@ -46,7 +46,7 @@ const NavBar = () => {
                   </Link>
                 </li>
                 <li className="cursor-pointer hover:text-nav-link-hover-light dark:hover:text-nav-link-hover-dark sm:px-1 md:px-2">
-                  <Link>
+                  <Link to="#">
                     <div className="nav-item-border py-2" onClick={logout}>
                       Logout
                     </div>
@@ -80,7 +80,7 @@ const NavBar = () => {
               </>
             )}
             <li className="cursor-pointer hover:text-nav-link-hover-light dark:hover:text-nav-link-hover-dark sm:px-1 md:px-2">
-              <Link>
+              <button className="focus:outline-none">
                 <div
                   className="py-2"
                   onClick={() => setTheme(colorTheme)}
@@ -112,7 +112,7 @@ const NavBar = () => {
                     </svg>
                   )}{' '}
                 </div>
-              </Link>
+              </button>
             </li>
           </ul>
         </div>
