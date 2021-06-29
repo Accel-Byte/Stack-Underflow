@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Form } from 'semantic-ui-react';
 import { gql } from '@apollo/client';
 import { useMutation } from '@apollo/client';
 
@@ -25,18 +24,10 @@ function PostForm(props) {
         tags,
       },
       update(proxy, result) {
-        const data = proxy.readQuery({
-          query: FETCH_POSTS_QUERY,
-        });
-        proxy.writeQuery({
-          query: FETCH_POSTS_QUERY,
-          data: {
-            getPosts: [result.data.createPost, ...data.getPosts],
-          },
-        });
         props.history.push('/');
       },
       onError(err) {
+        console.log(err);
         if (err.graphQLErrors[0].extensions.exception.errors)
           setErrors(err.graphQLErrors[0].extensions.exception.errors);
         else {
@@ -56,43 +47,51 @@ function PostForm(props) {
     setQuestion(value);
   };
 
+  let circleCommonClasses = 'h-3 w-3 bg-card-dark rounded-full';
+
   return (
-    <div class="bg-primary-light relative min-h-screen antialiased font-poppins pt-24">
-      <div class="max-w-5xl px-6 mx-auto">
-        <div class="relative flex flex-wrap">
-          <div class="w-full relative">
-            <div class="mt-6">
-              <div class="font-semibold text-gray-200 text-4xl">
+    <div className="bg-primary-light relative min-h-screen antialiased font-poppins pt-24">
+      <div className="max-w-5xl px-6 mx-auto">
+        <div className="relative flex flex-wrap">
+          <div className="w-full relative">
+            <div className="mt-6">
+              <div className="font-semibold text-gray-200 text-4xl">
                 Create Post
               </div>
-              <form class="mt-8" onSubmit={onSubmit} noValidate>
-                <div class="mx-auto w-full">
-                  <div class="py-1">
-                    <span class="px-1 text-sm text-gray-300">
+              <form className="mt-8" onSubmit={onSubmit} noValidate>
+                <div className="mx-auto w-full">
+                  <div className="py-1">  
+                    <span className="px-1 text-sm text-gray-300">
                       Title of Question{' '}
-                      <span class="text-red-400 font-extrabold text-lg">*</span>
+                      <span className="text-red-400 font-extrabold text-lg">
+                        *
+                      </span>
                     </span>
                     <input
-                      placeholder=""
+                      placeholder="Hi World!"
                       type="text"
-                      name="username"
-                      class="text-md block px-3 py-2 rounded-lg w-full bg-card-dark border-2 border-gray-900 focus:outline-none text-gray-200"
+                      className="text-md block px-3 py-2 rounded-lg w-full bg-card-dark border-2 border-gray-900 focus:outline-none text-gray-200"
                       onChange={onChange}
-                      value={values.username}
+                      name="title"
+                      value={values.title}
                       required
                     />
                   </div>
-                  <div class="py-1">
-                    <span class="px-1 text-sm text-gray-300">
+                  <div className="py-1">
+                    <span className="px-1 text-sm text-gray-300">
                       Tags{' '}
-                      <span class="text-red-400 font-extrabold text-lg">*</span>
+                      <span className="text-red-400 font-extrabold text-lg">
+                        *
+                      </span>
                     </span>
                     <QuestionTag tags={tags} setTags={setTags} />
                   </div>
-                  <div class="py-1">
-                    <span class="px-1 text-sm text-gray-300">
+                  <div className="py-1">
+                    <span className="px-1 text-sm text-gray-300">
                       Question{' '}
-                      <span class="text-red-400 font-extrabold text-lg">*</span>
+                      <span className="text-red-400 font-extrabold text-lg">
+                        *
+                      </span>
                     </span>
                     <Editor
                       loading={createPostLoading}
@@ -100,15 +99,37 @@ function PostForm(props) {
                       handleChange={answerChange}
                     />
                   </div>
+                  <div className="py-1">
+                    <button
+                      className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark"
+                      type="submit"
+                    >
+                      {createPostLoading ? (
+                        <div className="flex justify-center items-center py-2">
+                          <div
+                            className={`${circleCommonClasses} mr-1 animate-bounce1`}
+                          ></div>
+                          <div
+                            className={`${circleCommonClasses} mr-1 animate-bounce2`}
+                          ></div>
+                          <div
+                            className={`${circleCommonClasses} animate-bounce3`}
+                          ></div>
+                        </div>
+                      ) : (
+                        'Create Post'
+                      )}
+                    </button>
+                  </div>
                   {Object.keys(errors).length > 0 && (
-                    <div class="flex justify-start mt-3 p-1">
+                    <div className="flex justify-start mt-3 p-1">
                       <ul>
                         {Object.values(errors).map((value) => (
-                          <li class="flex items-center py-1" key={value}>
-                            <div class="bg-red-200 text-red-700 rounded-full p-1 fill-current">
+                          <li className="flex items-center py-1" key={value}>
+                            <div className="bg-red-200 text-red-700 rounded-full p-1 fill-current">
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                class="h-4 w-4"
+                                className="h-4 w-4"
                                 viewBox="0 0 20 20"
                                 fill="currentColor"
                               >
@@ -119,7 +140,7 @@ function PostForm(props) {
                                 />
                               </svg>
                             </div>
-                            <span class="font-medium text-sm ml-3 text-red-400">
+                            <span className="font-medium text-sm ml-3 text-red-400">
                               {value}
                             </span>
                           </li>
@@ -142,29 +163,31 @@ const CREATE_POST_MUTATION = gql`
     createPost(title: $title, body: $body, tags: $tags) {
       user
       id
-      question {
+      featured
+      question{
         username
         body
         title
-        tags {
+        tags{
           id
           name
         }
-        upvotes {
+        upvotes{
           username
         }
-        downvotes {
+        downvotes{
           username
         }
         voteCount
       }
-      answers {
+      answers{
+        _id
         username
         body
-        upvotes {
+        upvotes{
           username
         }
-        downvotes {
+        downvotes{
           username
         }
         voteCount
