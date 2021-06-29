@@ -9,6 +9,7 @@ import DeleteButton from '../DeleteButton';
 
 function PostCard({
   post: { createdAt, id, question, user: userId, answers },
+  currentPage
 }) {
   const { user } = useContext(AuthContext);
 
@@ -68,7 +69,7 @@ function PostCard({
           </div>
         </div>
         {user && user.username === question.username ? (
-          <DeleteButton postId={id}/>
+          <DeleteButton postId={id} currentPage={currentPage} />
         ) : null}
       </div>
     </div>

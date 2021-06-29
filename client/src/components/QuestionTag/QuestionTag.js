@@ -23,6 +23,12 @@ class QuestionTag extends React.Component {
       })
       .then(
         (myJson) => {
+          myJson = myJson.map((tag) => {
+            return {
+              id: tag.id,
+              name: tag.name
+            }
+          });
           this.setState({
             isLoaded: true,
             suggestions: myJson,
