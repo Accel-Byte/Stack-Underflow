@@ -5,7 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 
 import { FETCH_POSTS_QUERY } from '../utils/graphql';
 
-function DeleteButton({ postId, commentId, callback }) {
+function DeleteButton({ postId, commentId, callback, currentPage }) {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
@@ -14,20 +14,30 @@ function DeleteButton({ postId, commentId, callback }) {
 
   const [deletePostOrMutation] = useMutation(mutation, {
     update(proxy) {
+      console.log(postId);
       setConfirmOpen(false);
-      console.log(1);
       if (!commentId) {
         //gets posts from db and sets to var oldPosts
         const oldPosts = proxy.readQuery({
           query: FETCH_POSTS_QUERY,
+          variables: { // Provide any required variables here
+            page: currentPage,
+            tag: '',
+            search: '',
+            featured: false,
+          },
         });
+
+        console.log("old Posts : ", oldPosts);
         //sets newData to array of objects - the deleted post
-        const newData = oldPosts.getPosts.filter((p) => p.id !== postId);
+        const newData = oldPosts.getPosts.posts.filter((p) => p.id !== postId);
         //Sets getPosts to the newPosts
         proxy.writeQuery({
           query: FETCH_POSTS_QUERY,
           data: {
-            getPosts: newData,
+            getPosts: {
+              posts: newData,
+            }
           },
         });
       }
@@ -42,6 +52,7 @@ function DeleteButton({ postId, commentId, callback }) {
       return err;
     },
   });
+
   return (
     <>
       <div className="w-0 cursor-pointe text-red-500 text-lg">
@@ -138,7 +149,6 @@ function DeleteButton({ postId, commentId, callback }) {
                     type="button"
                     className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={() => {
-                      console.log(2);
                       deletePostOrMutation();
                       setOpen(false);
                     }}
