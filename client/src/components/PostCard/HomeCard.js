@@ -9,7 +9,7 @@ import DeleteButton from '../DeleteButton';
 
 function PostCard({
   post: { createdAt, id, question, user: userId, answers },
-  currentPage
+  currentPage,
 }) {
   const { user } = useContext(AuthContext);
 
@@ -49,7 +49,9 @@ function PostCard({
         </div>
         <div className="pl-4 pr-4 w-5/6 text-white text-lg">
           <div className="" style={{ flexBasis: '90%' }}>
-            <p style={{ lineHeight: '1.3rem' }}>{question.title}</p>
+            <Link to={`/posts/${id}`}>
+              <p style={{ lineHeight: '1.3rem' }}>{question.title}</p>
+            </Link>
           </div>
 
           <div className="text-sm text-gray-400 py-2">

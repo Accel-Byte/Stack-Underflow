@@ -1,87 +1,130 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useQuery, gql, NetworkStatus } from '@apollo/client';
+import React,  { useContext, useState, useEffect } from 'react';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import PostCard from '../components/PostCard/HomeCard';
-import Pagination from '../components/Pagination/Pagination';
-import Loader from '../components/Loader/Loader';
+import { AuthContext } from '../context/auth';
+import VoteButton from '../components/Button/voteButton';
+import Editor from '../components/Editor/Editor';
+import Answer from '../components/Answer';
+import Question from '../components/Question';
+import NothingHere from '../components/NothingHere/NothingHere';
 
-const Dashboard = (props) => {
-  const userId = props.match.params.userId;
-  const [open, setOpen] = useState(false);
-  const [userNotFound, setUserNotFound] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const notInitialRender = useRef(false);
+
+const SinglePost = (props) => {
+  const postId = props.match.params.postId;
+  const { user } = useContext(AuthContext);
+  const [postDoesNotExist, setPostDoesNotExist] = useState(false);
+  const [answer, setAnswer] = useState('');
 
   const {
-    loading,
-    data: {
-      getUser: user,
-      getUserPost: { posts } = {},
-      getUserPost: { totalPages } = 0,
-      getUserPost: { totalPosts } = 0,
-    } = {},
-    refetch,
-    networkStatus,
-  } = useQuery(FETCH_DASHBOARD_DATA, {
+    subscribeToMore,
+    data: { getPost } = {},
+    loading: postLoading,
+  } = useQuery(FETCH_POST_QUERY, {
     variables: {
-      userId,
-      page: currentPage,
+      postId,
     },
-    notifyOnNetworkStatusChange: true,
-    fetchPolicy: 'cache-and-network',
-    onError: (err) => {
-      console.log(err.message);
-      if (err.message.includes('UserNotFound')) {
-        setUserNotFound(true);
-      } else {
-        toast.error(err.message, {
-          position: 'top-right',
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-        });
+    onCompleted: (data) => {
+      if (!data.getPost) {
+        setPostDoesNotExist(true);
+      }
+    },
+    onError: (error) => {
+      if (error.message === 'PostNotFound') {
+        setPostDoesNotExist(true);
       }
     },
   });
-
-  useEffect(() => {
-    if (notInitialRender.current) {
-      refetch();
-    } else {
-      notInitialRender.current = true;
-    }
-    return () => {};
-  }, [currentPage]);
-
+  const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
+    skip: !getPost,
+    variables: {
+      userId: getPost && getPost.user,
+    },
+  });
   const { data: { getImage: image } = {}, loading: imageLoading } = useQuery(
     FETCH_IMAGE_QUERY,
     {
-      skip: !user,
+      skip: !getUser,
       variables: {
-        fileId: user && user.fileId,
+        fileId: getUser && getUser.fileId,
+      },
+    }
+  );
+  
+  useEffect(() => {
+    subscribeToMore({
+      document: NEW_COMMENT_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev;
+        const newComment = subscriptionData.data.newComment;
+
+        let updatedPosts = Object.assign(
+          {},
+          {
+            getPost: {
+              ...prev.getPost,
+              question: {
+                ...prev.getPost.question,
+                comments: [...prev.getPost.question.comments, newComment],
+              },
+            },
+          }
+        );
+        return updatedPosts;
+      },
+    });
+
+    subscribeToMore({
+      document: NEW_ANSWER_SUBSCRIPTION,
+      updateQuery: (prev, { subscriptionData }) => {
+        console.log(subscriptionData);
+        if (!subscriptionData.data) return prev;
+        const newAnswer = subscriptionData.data.newAnswer;
+
+        let updatedPosts = Object.assign(
+          {},
+          {
+            getPost: {
+              ...prev.getPost,
+              answers: [...prev.getPost.answers, newAnswer],
+            },
+          }
+        );
+        return updatedPosts;
+      },
+    });
+
+    return () => {};
+  }, [subscribeToMore]);
+
+  const [submitAnswer, { loading: submitAnswerLoading }] = useMutation(
+    SUBMIT_ANSWER_MUTATION,
+    {
+      variables: { postId: getPost?.id, body: answer },
+      update() {
+        setAnswer('');
       },
     }
   );
 
-  let votes = 0;
-  if (!loading && posts) {
-    posts.forEach((post) => {
-      votes += post.question.voteCount;
-    });
-  }
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const onSubmit = () => {
+    submitAnswer();
+  };
+  const answerChange = (value) => {
+    setAnswer(value);
   };
 
-  if (networkStatus === NetworkStatus.loading) {
-    return <Loader mainLoader={true} />;
+  function deletePostCallback() {
+    props.history.push('/');
+  }
+  let answers = [];
+  if (getPost) {
+    answers = getPost.answers;
+    answers = answers
+      .slice()
+      .sort((a, b) => (b.voteCount > a.voteCount ? 1 : -1));
   }
 
   return (
@@ -93,11 +136,17 @@ const Dashboard = (props) => {
               <span className="absolute bg-profile-tag-background-dark text-gray-900 top-6 left-6 rounded-sm px-4 py-0 text-base font-semibold">
                 PRO
               </span>
-              <img
-                className="border border-solid border-blue-400 rounded-full p-2 inline w-36 h-36"
-                src={image && 'data:image/jpeg;base64,' + image}
-                alt="user"
-              />
+              {image ? (
+                <img
+                  className="border border-solid border-blue-400 rounded-full p-2 inline w-36 h-36"
+                  src={'data:image/jpeg;base64,' + image}
+                  alt="user"
+                />
+              ) : (
+                <div className="mx-20 my-14">
+                  <div className="spinner"></div>
+                </div>
+              )}
               <h3 className="mt-2 mx-0 text-2xl">
                 {user ? user.username : ''}
               </h3>
@@ -108,33 +157,10 @@ const Dashboard = (props) => {
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
                 Architecto cum aliquam
               </p>
-              <div className="mt-5">
-                <button className="bg-profile-button-dark text-gray-900 border border-solid border-profile-button-dark rounded-md py-2 px-6 font-semibold focus:outline-none">
-                  Change Profile
-                </button>
-              </div>
             </div>
           </div>
           <div className="col-span-2 justify-self-stretch">
-            {networkStatus === NetworkStatus.refetch ? (
-              <Loader mainLoader={false} />
-            ) : (
-              <>
-                {' '}
-                <div>
-                  {posts &&
-                    posts.map((post) => <PostCard post={post} key={post.id} />)}
-                </div>
-                <Pagination
-                  itemsCount={totalPages * 3}
-                  pageSize={3}
-                  currentPage={currentPage}
-                  onPageChange={handlePageChange}
-                  totalPosts={totalPosts}
-                  totalPages={totalPages}
-                />
-              </>
-            )}
+            
           </div>
         </div>
       </div>
@@ -142,44 +168,121 @@ const Dashboard = (props) => {
   );
 };
 
-export default Dashboard;
+export default SinglePost;
 
-const FETCH_DASHBOARD_DATA = gql`
-  query DashboardData($userId: ID!, $page: Int) {
-    getUser(userId: $userId) {
-      username
-      email
+const FETCH_POST_QUERY = gql`
+  query($postId: ID!) {
+    getPost(postId: $postId) {
+      id
       createdAt
-      fileId
-    }
-    getUserPost(userId: $userId, page: $page) {
-      posts {
-        id
-        createdAt
-        question {
+      question {
+        commentCount
+        username
+        body
+        title
+        tags {
+          id
+          name
+        }
+        upvotes {
+          username
+        }
+        downvotes {
+          username
+        }
+        voteCount
+        comments {
+          _id
           username
           body
-          tags {
-            id
-            name
-          }
-          title
-          commentCount
-          voteCount
+          createdAt
         }
-        answers {
-          _id
-        }
-        user
       }
-      totalPages
-      totalPosts
+      answers {
+        _id
+        body
+        createdAt
+        upvotes {
+          username
+          createdAt
+        }
+        downvotes {
+          username
+          createdAt
+        }
+        voteCount
+        username
+      }
+      user
     }
   }
 `;
 
 const FETCH_IMAGE_QUERY = gql`
-  query ($fileId: ID!) {
+  query($fileId: ID!) {
     getImage(fileId: $fileId)
+  }
+`;
+
+const FETCH_USER_QUERY = gql`
+  query($userId: ID!) {
+    getUser(userId: $userId) {
+      fileId
+      username
+    }
+  }
+`;
+
+const SUBMIT_ANSWER_MUTATION = gql`
+  mutation createAnswer($postId: ID!, $body: String!) {
+    createAnswer(postId: $postId, body: $body) {
+      id
+      createdAt
+      answers {
+        _id
+        body
+        createdAt
+        upvotes {
+          username
+          createdAt
+        }
+        downvotes {
+          username
+          createdAt
+        }
+        voteCount
+      }
+    }
+  }
+`;
+
+const NEW_COMMENT_SUBSCRIPTION = gql`
+  subscription newComment {
+    newComment {
+      _id
+      body
+      createdAt
+      username
+    }
+  }
+`;
+
+const NEW_ANSWER_SUBSCRIPTION = gql`
+  subscription newAnswer {
+    newAnswer {
+      _id
+      body
+      createdAt
+      upvotes {
+        username
+        createdAt
+      }
+      downvotes {
+        username
+        createdAt
+      }
+      voteCount
+      username
+    }
   }
 `;
