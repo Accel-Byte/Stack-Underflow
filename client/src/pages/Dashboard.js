@@ -122,67 +122,67 @@ const Dashboard = (props) => {
             </div>
           </div>
           <div className="col-span-4 justify-self-stretch">
-            <div className="flex justify-between font-poppins">
-              <div className="relative p-4 px-12 rounded-md mb-6 bg-blue-600 text-white overflow-hidden">
-                <i className="absolute h-16 w-16 -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
-                    <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
-                  </svg>
-                </i>
-                <h3 className="text-center text-xl">{totalPosts}</h3>
-                <hr className="w-5/6 mx-auto my-2 opacity-40" />
-                <p className="lead text-center text-xl">Total Posts</p>
-              </div>
-              <div className="relative p-4 px-12 rounded-md mb-6 bg-red-500 text-white overflow-hidden">
-                <i className="absolute h-16 w-16 -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </i>
-                <h3 className="text-center text-xl">3</h3>
-                <hr className="w-5/6 mx-auto my-2 opacity-40" />
-                <p className="lead text-center text-xl">Total Answers</p>
-              </div>
-              <div className="relative p-4 px-12 rounded-md mb-6 bg-green-500 text-white overflow-hidden">
-                <i className="absolute h-16 w-16  -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </i>
-                <h3 className="text-center text-xl">{votes}</h3>
-                <hr className="w-5/6 mx-auto my-2 opacity-40" />
-                <p className="lead text-center text-xl">Total Votes</p>
-              </div>
-            </div>
             {networkStatus === NetworkStatus.refetch ? (
               <Loader mainLoader={false} />
             ) : (
               <>
                 {' '}
+                <div className="flex justify-between font-poppins">
+                  <div className="relative p-4 px-12 rounded-md mb-6 bg-blue-600 text-white overflow-hidden">
+                    <i className="absolute h-16 w-16 -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path d="M9 2a2 2 0 00-2 2v8a2 2 0 002 2h6a2 2 0 002-2V6.414A2 2 0 0016.414 5L14 2.586A2 2 0 0012.586 2H9z" />
+                        <path d="M3 8a2 2 0 012-2v10h8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+                      </svg>
+                    </i>
+                    <h3 className="text-center text-xl">{totalPosts}</h3>
+                    <hr className="w-5/6 mx-auto my-2 opacity-40" />
+                    <p className="lead text-center text-xl">Total Posts</p>
+                  </div>
+                  <div className="relative p-4 px-12 rounded-md mb-6 bg-red-500 text-white overflow-hidden">
+                    <i className="absolute h-16 w-16 -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 13V5a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2h3l3 3 3-3h3a2 2 0 002-2zM5 7a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1zm1 3a1 1 0 100 2h3a1 1 0 100-2H6z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </i>
+                    <h3 className="text-center text-xl">3</h3>
+                    <hr className="w-5/6 mx-auto my-2 opacity-40" />
+                    <p className="lead text-center text-xl">Total Answers</p>
+                  </div>
+                  <div className="relative p-4 px-12 rounded-md mb-6 bg-green-500 text-white overflow-hidden">
+                    <i className="absolute h-16 w-16  -top-5 -left-3 text-xl p-6 pt-7 bg-opacity-10 bg-white rounded-full">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </i>
+                    <h3 className="text-center text-xl">{votes}</h3>
+                    <hr className="w-5/6 mx-auto my-2 opacity-40" />
+                    <p className="lead text-center text-xl">Total Votes</p>
+                  </div>
+                </div>
                 <div>
                   {posts &&
                     posts.map((post) => <PostCard post={post} key={post.id} />)}

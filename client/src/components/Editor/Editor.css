@@ -28,17 +28,26 @@
     min-height: 10rem;
 }
 
-.ql-editor blockquote {
-    color: #000;
-}
-
 .ql-snow .ql-editor pre.ql-syntax {
-    background-color: #eee !important;
-    color: #000 !important;
+    background-color: #283149 !important;
     overflow: visible;
+    font-size: 14px !important;
+    color: #ABA5B2 !important;
 }
 
 .ql-syntax {
-    background-color: #eee !important;
-    padding: 0.8rem 0.8rem 0.8rem 1rem;
+    background-color: #283149 !important;
+    overflow: visible;
+    font-size: 14px;
+    color: #ABA5B2;
+    padding: 0.8rem 0.8rem 0.8rem 1rem !important;
+}
+
+blockquote {
+    background: #283149 !important;
+    border-left: 0.6rem solid #ccc !important;
+    margin: 1em 0px !important;
+    padding: 0.5em 15px !important;
+    color: azure !important;
+    font-size: 16px;
 }

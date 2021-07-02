@@ -1,4 +1,4 @@
-import React,  { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
 import { ToastContainer, toast } from 'react-toastify';
@@ -10,7 +10,6 @@ import Editor from '../components/Editor/Editor';
 import Answer from '../components/Answer';
 import Question from '../components/Question';
 import NothingHere from '../components/NothingHere/NothingHere';
-
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
@@ -52,7 +51,7 @@ const SinglePost = (props) => {
       },
     }
   );
-  
+
   useEffect(() => {
     subscribeToMore({
       document: NEW_COMMENT_SUBSCRIPTION,
@@ -130,8 +129,8 @@ const SinglePost = (props) => {
   return (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="col-span-1 justify-self-center h-37rem overflow-y-scroll scroll-1 font-poppins">
+        <div className="grid grid-cols-7 gap-4">
+          <div className="col-span-2 justify-self-center h-37rem overflow-y-scroll scroll-1 font-poppins">
             <div className="bg-card-dark relative shadow-profile-card-shadow rounded-md pt-8 pb-4 px-10 w-80 text-center mx-auto max-w-full text-gray-300">
               <span className="absolute bg-profile-tag-background-dark text-gray-900 top-6 left-6 rounded-sm px-4 py-0 text-base font-semibold">
                 PRO
@@ -159,8 +158,14 @@ const SinglePost = (props) => {
               </p>
             </div>
           </div>
-          <div className="col-span-2 justify-self-stretch">
-            
+          <div className="col-span-4 justify-self-stretch">
+            {getPost && (
+              <Question
+                post={getPost}
+                user={user}
+                deletePostCallback={deletePostCallback}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -171,7 +176,7 @@ const SinglePost = (props) => {
 export default SinglePost;
 
 const FETCH_POST_QUERY = gql`
-  query($postId: ID!) {
+  query ($postId: ID!) {
     getPost(postId: $postId) {
       id
       createdAt
@@ -219,13 +224,13 @@ const FETCH_POST_QUERY = gql`
 `;
 
 const FETCH_IMAGE_QUERY = gql`
-  query($fileId: ID!) {
+  query ($fileId: ID!) {
     getImage(fileId: $fileId)
   }
 `;
 
 const FETCH_USER_QUERY = gql`
-  query($userId: ID!) {
+  query ($userId: ID!) {
     getUser(userId: $userId) {
       fileId
       username

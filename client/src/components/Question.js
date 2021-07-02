@@ -43,71 +43,37 @@ function Question({ post, user, deletePostCallback }) {
   };
 
   return (
-    <Card fluid color="blue" style={{ padding: '1rem' }}>
-      <Card.Content>
-        <Card.Header>{post.question.title}</Card.Header>
-        <Card.Meta>{moment(post.createdAt).fromNow()}</Card.Meta>
-        <Card.Description
+    <div className="bg-primary-light font-poppins">
+      <div className="bg-card-dark py-2 px-8 mx-8 text-white">
+        <div className="py-2">
+          <h1 className="text-2xl">React get data from MongoDB</h1>
+          <p className="text-xs pt-1 text-gray-400">a month ago</p>
+        </div>
+        <hr />
+        <div
+          className="pt-4 text-gray-300"
           style={{
-            marginBottom: '20px',
-            marginTop: '0px',
-            color: '#999',
+            fontSize: '16px',
+            overflowWrap: 'break-word',
           }}
-        >
-          {'By ' + post.question.username}
-        </Card.Description>
-        <Divider />
-        <Card.Description
-          style={{ fontSize: '16px', color: '#000', overflowWrap: 'break-word' }}
           dangerouslySetInnerHTML={{ __html: post.question.body }}
-        />
-      </Card.Content>
-      <Card.Content>
-        {post.question.tags.map((tag, i) => (
-          <Label as="a" key={tag.id} color={colors[i % colors.length]}>
-            {tag.name}
-          </Label>
-        ))}
-      </Card.Content>
-      <Card.Content extra>
-        <MyPopup content="Comment on post">
-          <Button
-            compact
-            size="mini"
-            as="div"
-            labelPosition="right"
-            onClick={() => console.log('Comment on post')}
-          >
-            <Button compact size="mini" basic color="blue">
-              <Icon name="comments" />
-            </Button>
-            <Label basic color="blue" pointing="left">
-              {post.question.commentCount}
-            </Label>
-          </Button>
-        </MyPopup>
-        {
-          // TODO: SEE This Bastard Your DownVote button actually Upvote the post
-        }
-        {user && user.username === post.question.username && (
-          <DeleteButton postId={post.id} callback={deletePostCallback} />
-        )}
-        <CreateComment
-          submitComment={submitComment}
-          comment={comment}
-          user={user}
-          commentChange={commentChange}
-          commentInputRef={commentInputRef}
-          open={open}
-          setOpen={setOpen}
-        />
-      </Card.Content>
-      <Card.Content>
-        {post.question.comments.map((comment, i) => (
-          <ShowComment key={comment._id} comment={comment} id={post.id} user={user} />
-        ))}
-      </Card.Content>
-    </Card>
+        ></div>
+        <div className="py-4 font-semibold">
+          <span className="text-card-green-dark"> #mongodb</span>
+          <span className="text-card-blue-dark"> #React</span>
+          <span className="text-card-pink-dark"> #Graphql</span>
+        </div>
+        <hr />
+        <div className="flex pt-4 justify-between">
+          <button className="text-card-blue-dark font-semibold cursor-pointer">
+            Add Comment
+          </button>
+          <div className="text-sm text-gray-400">
+            <p>By Acce_l</p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
