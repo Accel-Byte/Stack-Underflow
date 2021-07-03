@@ -42,6 +42,15 @@ function Question({ post, user, deletePostCallback }) {
     setComment(e.target.value);
   };
 
+  const color = [
+    'text-red-400',
+    'text-yellow-300',
+    'text-green-400',
+    'text-card-orange-dark',
+    'text-card-blue-dark',
+    'text-purple-500',
+  ];
+
   return (
     <div className="bg-primary-light font-poppins">
       <div className="bg-card-dark py-2 px-8 mx-8 text-white">
@@ -59,12 +68,17 @@ function Question({ post, user, deletePostCallback }) {
           dangerouslySetInnerHTML={{ __html: post.question.body }}
         ></div>
         <div className="py-4 font-semibold">
-          <span className="text-card-green-dark"> #mongodb</span>
-          <span className="text-card-blue-dark"> #React</span>
-          <span className="text-card-pink-dark"> #Graphql</span>
+          {post.question &&
+            post.question.tags.slice(0, 6).map((tag, index) => {
+              return (
+                <span className={`${color[index]}`} key={tag.id}>
+                  #{tag.name} &nbsp;
+                </span>
+              );
+            })}
         </div>
         <hr />
-        <div className="flex pt-4 justify-between">
+        <div className="flex pt-4 pb-2 justify-between">
           <button className="text-card-blue-dark font-semibold cursor-pointer">
             Add Comment
           </button>
