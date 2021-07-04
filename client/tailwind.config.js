@@ -25,6 +25,8 @@ module.exports = {
         'profile-card-dark': '#231E39',
         'profile-tag-background-dark': '#FEBB0B',
         'profile-button-dark': '#03BFCB',
+        
+        'comment-dark': '#343A40'
       },
       animation: {
         bounce200: 'bounce 10ms infinite 200ms',

@@ -10,6 +10,7 @@ import Editor from '../components/Editor/Editor';
 import Answer from '../components/Answer';
 import Question from '../components/Question';
 import NothingHere from '../components/NothingHere/NothingHere';
+import Loader from '../components/Loader/Loader';
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
@@ -36,12 +37,15 @@ const SinglePost = (props) => {
       }
     },
   });
-  const { data: { getUser } = {} } = useQuery(FETCH_USER_QUERY, {
-    skip: !getPost,
-    variables: {
-      userId: getPost && getPost.user,
-    },
-  });
+  const { data: { getUser } = {}, loading: userLoading } = useQuery(
+    FETCH_USER_QUERY,
+    {
+      skip: !getPost,
+      variables: {
+        userId: getPost && getPost.user,
+      },
+    }
+  );
   const { data: { getImage: image } = {}, loading: imageLoading } = useQuery(
     FETCH_IMAGE_QUERY,
     {
@@ -126,10 +130,14 @@ const SinglePost = (props) => {
       .sort((a, b) => (b.voteCount > a.voteCount ? 1 : -1));
   }
 
+  if (userLoading) {
+    return <Loader mainLoader={true} />;
+  }
+
   return (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
-        <div className="grid grid-cols-7 gap-4">
+        <div className="grid grid-cols-7 gap-x-14">
           <div className="col-span-2 justify-self-center h-37rem overflow-y-scroll scroll-1 font-poppins">
             <div className="bg-card-dark relative shadow-profile-card-shadow rounded-md pt-8 pb-4 px-10 w-80 text-center mx-auto max-w-full text-gray-300">
               <span className="absolute bg-profile-tag-background-dark text-gray-900 top-6 left-6 rounded-sm px-4 py-0 text-base font-semibold">
@@ -147,10 +155,10 @@ const SinglePost = (props) => {
                 </div>
               )}
               <h3 className="mt-2 mx-0 text-2xl">
-                {user ? user.username : ''}
+                By {getUser ? getUser.username : ''}
               </h3>
               <h6 className="text-sm mx-0 mt-1 text-gray-500">
-                Joined in {moment(user ? user.createdAt : '').year()}
+                Joined in {moment(getUser ? getUser.createdAt : '').year()}
               </h6>
               <p className="leading-5 my-3 text-sm font-light text-gray-400">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit.
@@ -159,13 +167,28 @@ const SinglePost = (props) => {
             </div>
           </div>
           <div className="col-span-4 justify-self-stretch">
-            {getPost && (
-              <Question
-                post={getPost}
-                user={user}
-                deletePostCallback={deletePostCallback}
-              />
-            )}
+            <div className="flex gap-x-4">
+              <div className="">
+                  {getPost && (
+                    <VoteButton
+                      user={user}
+                      id={getPost.id}
+                      voteCount={getPost.question.voteCount}
+                      upvotes={getPost.question.upvotes}
+                      downvotes={getPost.question.downvotes}
+                    />
+                  )}    
+              </div>
+              <div className="w-full">
+                {getPost && (
+                  <Question
+                    post={getPost}
+                    user={user}
+                    deletePostCallback={deletePostCallback}
+                  />
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -234,6 +257,7 @@ const FETCH_USER_QUERY = gql`
     getUser(userId: $userId) {
       fileId
       username
+      createdAt
     }
   }
 `;
