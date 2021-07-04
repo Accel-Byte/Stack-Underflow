@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
-import { Button, Card, Icon, Label, Divider } from 'semantic-ui-react';
 import moment from 'moment';
 
 import DeleteButton from '../components/DeleteButton';
@@ -24,20 +23,23 @@ function Question({ post, user, deletePostCallback }) {
     'pink',
     'brown',
   ];
-  const [submitComment] = useMutation(SUBMIT_COMMENT_MUTATION, {
-    update() {
-      setComment('');
-      commentInputRef.current.blur();
-      setOpen(false);
-    },
-    variables: {
-      postId: post.id,
-      body: comment,
-    },
-    onError(err) {
-      console.log(err);
-    },
-  });
+  const [submitComment, { loading: commentLoading }] = useMutation(
+    SUBMIT_COMMENT_MUTATION,
+    {
+      update() {
+        setComment('');
+        commentInputRef.current.blur();
+        setOpen(false);
+      },
+      variables: {
+        postId: post.id,
+        body: comment,
+      },
+      onError(err) {
+        console.log(err);
+      },
+    }
+  );
   const commentChange = (e) => {
     setComment(e.target.value);
   };
@@ -53,12 +55,14 @@ function Question({ post, user, deletePostCallback }) {
 
   return (
     <div className="bg-primary-light font-poppins">
-      <div className="bg-card-dark py-2 px-8 mx-8 text-white">
+      <div className="bg-card-dark py-2 px-8 text-white">
         <div className="py-2">
-          <h1 className="text-2xl">React get data from MongoDB</h1>
-          <p className="text-xs pt-1 text-gray-400">a month ago</p>
+          <h1 className="text-2xl">{post.question.title}</h1>
+          <p className="text-xs pt-1 text-gray-400">
+            {moment(post.createdAt).fromNow()}
+          </p>
         </div>
-        <hr />
+        <hr className="border-gray-500" />
         <div
           className="pt-4 text-gray-300"
           style={{
@@ -67,7 +71,7 @@ function Question({ post, user, deletePostCallback }) {
           }}
           dangerouslySetInnerHTML={{ __html: post.question.body }}
         ></div>
-        <div className="py-4 font-semibold">
+        <div className="py-4 font-semibold text-sm">
           {post.question &&
             post.question.tags.slice(0, 6).map((tag, index) => {
               return (
@@ -77,14 +81,31 @@ function Question({ post, user, deletePostCallback }) {
               );
             })}
         </div>
-        <hr />
+        <hr className="border-gray-500" />
         <div className="flex pt-4 pb-2 justify-between">
-          <button className="text-card-blue-dark font-semibold cursor-pointer">
-            Add Comment
-          </button>
+          {user && (
+            <CreateComment
+              submitComment={submitComment}
+              comment={comment}
+              commentChange={commentChange}
+              commentInputRef={commentInputRef}
+              commentLoading={commentLoading}
+            />
+          )}
           <div className="text-sm text-gray-400">
-            <p>By Acce_l</p>
+            <p></p>
           </div>
+        </div>
+        <hr className="border-gray-500" />
+        <div className="mt-4 mb-2">
+          {post.question.comments.map((comment, i) => (
+            <ShowComment
+              key={comment._id}
+              comment={comment}
+              id={post.id}
+              user={user}
+            />
+          ))}
         </div>
       </div>
     </div>
