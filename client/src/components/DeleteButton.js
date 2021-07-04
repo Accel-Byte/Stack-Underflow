@@ -11,6 +11,7 @@ function DeleteButton({ postId, commentId, callback, currentPage }) {
   const cancelButtonRef = useRef(null);
 
   const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+  const type = commentId ? 'COMMENT_DELETE' : 'POST_DELETE';
 
   const [deletePostOrMutation] = useMutation(mutation, {
     update(proxy) {
@@ -20,7 +21,8 @@ function DeleteButton({ postId, commentId, callback, currentPage }) {
         //gets posts from db and sets to var oldPosts
         const oldPosts = proxy.readQuery({
           query: FETCH_POSTS_QUERY,
-          variables: { // Provide any required variables here
+          variables: {
+            // Provide any required variables here
             page: currentPage,
             tag: '',
             search: '',
@@ -28,7 +30,7 @@ function DeleteButton({ postId, commentId, callback, currentPage }) {
           },
         });
 
-        console.log("old Posts : ", oldPosts);
+        console.log('old Posts : ', oldPosts);
         //sets newData to array of objects - the deleted post
         const newData = oldPosts.getPosts.posts.filter((p) => p.id !== postId);
         //Sets getPosts to the newPosts
@@ -37,7 +39,7 @@ function DeleteButton({ postId, commentId, callback, currentPage }) {
           data: {
             getPosts: {
               posts: newData,
-            }
+            },
           },
         });
       }
@@ -132,13 +134,15 @@ function DeleteButton({ postId, commentId, callback, currentPage }) {
                         as="h3"
                         className="text-lg leading-6 font-medium text-gray-100"
                       >
-                        Deactivate account
+                        {type === 'COMMENT_DELETE'
+                          ? 'Delete Comment'
+                          : 'Delete Post'}
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-sm text-gray-400">
-                          Are you sure you want to deactivate your account? All
-                          of your data will be permanently removed. This action
-                          cannot be undone.
+                          {type === 'COMMENT_DELETE'
+                            ? 'Are you sure you want to delete comment?'
+                            : 'Are you sure you want to delete post? :('}
                         </p>
                       </div>
                     </div>
