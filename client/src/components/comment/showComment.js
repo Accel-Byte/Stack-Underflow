@@ -1,32 +1,23 @@
 import React from 'react';
-import { Card } from 'semantic-ui-react';
 import DeleteButton from '../DeleteButton';
 import moment from 'moment';
 
 function ShowComment({ user, id, comment }) {
   return (
-    <Card fluid>
-      <Card.Content style={{ padding: '4px 10px 4px 10px' }}>
-        {user && user.username === comment.username && (
-          <DeleteButton postId={id} commentId={comment._id} />
-        )}
-        <Card.Header
-          style={{
-            display: 'inline',
-            marginRight: '5px',
-            fontSize: '12px',
-          }}
-        >
+    <div className="bg-comment-dark px-4 py-2 rounded-md my-2">
+      <div className="flex text-gray-200 justify-between">
+        <div className="text-sm">
           {comment.username}
-        </Card.Header>
-        <Card.Meta style={{ display: 'inline', fontSize: '12px' }}>
-          {moment(comment.createdAt).fromNow()}
-        </Card.Meta>
-        <Card.Description style={{ fontSize: '14px' }}>
-          {comment.body}
-        </Card.Description>
-      </Card.Content>
-    </Card>
+          <p className="text-xs inline-block ml-2 text-gray-400">
+            {moment(comment.createdAt).fromNow()}
+          </p>
+        </div>
+        <div className="mr-3">
+          <DeleteButton postId={id} commentId={comment._id} />
+        </div>
+      </div>
+      <div className="text-gray-300 text-sm">{comment.body}</div>
+    </div>
   );
 }
 
