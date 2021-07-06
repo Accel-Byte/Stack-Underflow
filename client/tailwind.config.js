@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     boxShadow: {
       'nav-shadow': '0 10px 30px 0 rgba(138, 155, 165, 0.15)',
-      'profile-card-shadow': '0px 10px 20px -10px rgba(0,0,0, 0.75)'
+      'profile-card-shadow': '0px 10px 20px -10px rgba(0,0,0, 0.75)',
     },
     extend: {
       colors: {
@@ -25,7 +25,7 @@ module.exports = {
         'profile-card-dark': '#231E39',
         'profile-tag-background-dark': '#FEBB0B',
         'profile-button-dark': '#03BFCB',
-        
+
         'comment-dark': '#343A40'
       },
       animation: {
@@ -44,16 +44,23 @@ module.exports = {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(359deg)' },
         },
+        spinner: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
       borderStyle: ['hover'],
       fontFamily: {
         poppins: 'Poppins',
+        josefin: 'Josefin Sans',
       },
       height: {
         '37rem': '37rem',
       },
       width: {
         '99%': '99%',
+        '27rem': '27rem',
+        '25rem': '25rem',
       },
     },
   },
