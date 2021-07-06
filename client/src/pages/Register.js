@@ -168,7 +168,6 @@ function Register(props) {
                         className="border-gray-900 focus:ring-blue-600 block w-full overflow-hidden cursor-pointer border text-gray-300 bg-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:border-transparent"
                         aria-describedby="view_model_avatar_help"
                         id="view_model_avatar"
-                        name="view_model[avatar]"
                         type="file"
                         name="file"
                         required
@@ -178,7 +177,7 @@ function Register(props) {
                       />
                     </div>
                   </div>
-                  <button className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark">
+                  <button className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark focus:outline-none">
                     {loading ? (
                       <div className="flex justify-center items-center py-2">
                         <div

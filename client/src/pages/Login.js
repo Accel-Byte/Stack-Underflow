@@ -72,7 +72,7 @@ function Login(props) {
                       required
                     />
                   </div>
-                  <button className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark">
+                  <button className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark focus:outline-none">
                     {loading ? (
                       <div className="flex justify-center items-center py-2">
                         <div

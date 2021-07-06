@@ -60,7 +60,7 @@ function PostForm(props) {
               </div>
               <form className="mt-8" onSubmit={onSubmit} noValidate>
                 <div className="mx-auto w-full">
-                  <div className="py-1">  
+                  <div className="py-1">
                     <span className="px-1 text-sm text-gray-300">
                       Title of Question{' '}
                       <span className="text-red-400 font-extrabold text-lg">
@@ -93,15 +93,11 @@ function PostForm(props) {
                         *
                       </span>
                     </span>
-                    <Editor
-                      loading={createPostLoading}
-                      editorText={question}
-                      handleChange={answerChange}
-                    />
+                    <Editor editorText={question} handleChange={answerChange} />
                   </div>
                   <div className="py-1">
                     <button
-                      className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark"
+                      className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark focus:outline-none"
                       type="submit"
                     >
                       {createPostLoading ? (
@@ -164,30 +160,30 @@ const CREATE_POST_MUTATION = gql`
       user
       id
       featured
-      question{
+      question {
         username
         body
         title
-        tags{
+        tags {
           id
           name
         }
-        upvotes{
+        upvotes {
           username
         }
-        downvotes{
+        downvotes {
           username
         }
         voteCount
       }
-      answers{
+      answers {
         _id
         username
         body
-        upvotes{
+        upvotes {
           username
         }
-        downvotes{
+        downvotes {
           username
         }
         voteCount
