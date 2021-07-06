@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './Editor.css'
 
-const Editor = ({ loading, editorText, handleChange }) => {
+const Editor = ({ editorText, handleChange }) => {
   
   const modules = {syntax: true};
   modules.toolbar = [

@@ -6,8 +6,8 @@ import VoteButton from '../components/Button/voteButton';
 
 const Answer = ({ answer, user, id }) => {
   return (
-    <>
-      <Grid.Column  width={1} style={{ paddingTop: '1rem' }}>
+    <div className="flex gap-x-4 mt-4">
+      <div className="">
         <VoteButton
           user={user}
           id={id}
@@ -16,29 +16,30 @@ const Answer = ({ answer, user, id }) => {
           upvotes={answer.upvotes}
           downvotes={answer.downvotes}
         />
-      </Grid.Column>
-      <Grid.Column width={15}>
-        <Card fluid color="purple" style={{ padding: '10px' }}>
-          <Card.Content>
-            <Card.Description style={{ fontSize: '16px', color: '#000' }} dangerouslySetInnerHTML={{ __html: answer.body }}>    
-            </Card.Description>
-            <Card.Meta textAlign="right">
-              {moment(answer.createdAt).fromNow()}
-            </Card.Meta>
-            <Card.Description
-              textAlign="right"
+      </div>
+      <div className="w-full">
+        <div className="bg-primary-light font-poppins">
+          <div className="bg-card-dark py-2 px-8 text-white rounded-lg">
+            <div
+              className="pt-4 text-gray-300"
               style={{
-                marginBottom: '0',
-                marginTop: '0px',
-                color: '#999',
+                fontSize: '16px',
+                overflowWrap: 'break-word',
               }}
-            >
-              {'By ' + answer.username}
-            </Card.Description>
-          </Card.Content>
-        </Card>
-      </Grid.Column>
-    </>
+              dangerouslySetInnerHTML={{ __html: answer.body }}
+            ></div>
+            <div className="flex justify-end pt-2">
+              <div>
+              <p className="text-xs text-gray-400 text-right">
+                {moment(answer.createdAt).fromNow()}
+              </p>
+              <p className="text-sm text-gray-400 text-right">By {answer.username}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

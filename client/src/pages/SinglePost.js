@@ -112,7 +112,8 @@ const SinglePost = (props) => {
     }
   );
 
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     submitAnswer();
   };
   const answerChange = (value) => {
@@ -134,11 +135,13 @@ const SinglePost = (props) => {
     return <Loader mainLoader={true} />;
   }
 
+  let circleCommonClasses = 'h-3 w-3 bg-card-dark rounded-full';
+
   return (
     <>
-      <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
+      <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500 font-poppins">
         <div className="grid grid-cols-7 gap-x-14">
-          <div className="col-span-2 justify-self-center h-37rem overflow-y-scroll scroll-1 font-poppins">
+          <div className="col-span-2 justify-self-center overflow-y-scroll scroll-1 font-poppins">
             <div className="bg-card-dark relative shadow-profile-card-shadow rounded-md pt-8 pb-4 px-10 w-80 text-center mx-auto max-w-full text-gray-300">
               <span className="absolute bg-profile-tag-background-dark text-gray-900 top-6 left-6 rounded-sm px-4 py-0 text-base font-semibold">
                 PRO
@@ -169,15 +172,15 @@ const SinglePost = (props) => {
           <div className="col-span-4 justify-self-stretch">
             <div className="flex gap-x-4">
               <div className="">
-                  {getPost && (
-                    <VoteButton
-                      user={user}
-                      id={getPost.id}
-                      voteCount={getPost.question.voteCount}
-                      upvotes={getPost.question.upvotes}
-                      downvotes={getPost.question.downvotes}
-                    />
-                  )}    
+                {getPost && (
+                  <VoteButton
+                    user={user}
+                    id={getPost.id}
+                    voteCount={getPost.question.voteCount}
+                    upvotes={getPost.question.upvotes}
+                    downvotes={getPost.question.downvotes}
+                  />
+                )}
               </div>
               <div className="w-full">
                 {getPost && (
@@ -188,6 +191,55 @@ const SinglePost = (props) => {
                   />
                 )}
               </div>
+            </div>
+            <h2 className="mt-8 text-gray-200 font-semibold font-josefin text-2xl">
+              {answers.length} Answers:
+            </h2>
+            <div className="mt-2">
+              {getPost &&
+                answers.map((answer) => (
+                  <Answer
+                    answer={answer}
+                    user={user}
+                    id={getPost.id}
+                    key={answer._id}
+                  />
+                ))}
+            </div>
+            <h2 className="mt-8 text-gray-200 font-semibold font-josefin text-2xl">
+              Write Answer:
+            </h2>
+            <div className="mt-2">
+              <form onSubmit={onSubmit}>
+                <div className="flex gap-x-4">
+                  <div className="w-8"></div>
+                  <div>
+                    <Editor editorText={answer} handleChange={answerChange} />
+                    <div className="py-1">
+                      <button
+                        className="mt-3 text-lg font-semibold bg-login-button-dark w-full text-card-dark rounded-lg px-6 py-3 block shadow-xl hover:bg-login-button-dark-hover hover:text-login-button-dark focus:outline-none"
+                        type="submit"
+                      >
+                        {submitAnswerLoading ? (
+                          <div className="flex justify-center items-center py-2">
+                            <div
+                              className={`${circleCommonClasses} mr-1 animate-bounce1`}
+                            ></div>
+                            <div
+                              className={`${circleCommonClasses} mr-1 animate-bounce2`}
+                            ></div>
+                            <div
+                              className={`${circleCommonClasses} animate-bounce3`}
+                            ></div>
+                          </div>
+                        ) : (
+                          'Submit Answer'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
