@@ -4,6 +4,7 @@
   "description": "Social Media App Based On MERNG",
   "main": "index.js",
   "scripts": {
+    "start": "node index",
     "serve": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

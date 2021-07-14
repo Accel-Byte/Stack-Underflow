@@ -7,7 +7,8 @@ const cors = require("cors");
 
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers/index');
-const { MONGODB, PORT } = require('./config');
+const { MONGODB } = require('./config');
+const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(
