@@ -81,10 +81,9 @@ const UpdateImage = ({ userId, fileId }) => {
                 {loading ? (
                   <div className="my-8">
                     <div
-                      className="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4"
+                      className="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4 animate-updateImageLoading"
                       style={{
                         borderTopColor: '#3498db',
-                        animation: 'spinner 1.5s linear infinite',
                       }}
                     ></div>
                     <h2 class="text-center text-white text-xl font-semibold w-full">

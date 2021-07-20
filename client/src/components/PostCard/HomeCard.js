@@ -44,7 +44,7 @@ function PostCard({
               alt="img"
             />
           ) : (
-            <div className="spinner"></div>
+            <div className="spinner animate-spinner"></div>
           )}
         </div>
         <div className="pl-4 pr-4 w-5/6 text-white text-lg">

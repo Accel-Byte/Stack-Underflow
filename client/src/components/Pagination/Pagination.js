@@ -11,7 +11,7 @@ const Pagination = ({
   totalPages,
 }) => {
   const pagesCount = Math.ceil(itemsCount / pageSize);
-  if (pagesCount === 1) return null;
+  if (pagesCount === 1 || pagesCount === 0) return null;
   const pages =
     currentPage <= 3
       ? _.range(1, Math.min(6, pagesCount + 1))

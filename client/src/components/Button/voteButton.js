@@ -2,9 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
-import { Button, Label, Icon, Grid } from 'semantic-ui-react';
-
-import MyPopup from '../../utils/MyPopup';
 
 function VoteButton({ user, id, voteCount, upvotes, downvotes, answerId }) {
   const [state, setState] = useState({

@@ -102,7 +102,7 @@ const Dashboard = (props) => {
                 />
               ) : (
                 <div className="mx-20 my-14">
-                  <div className="spinner"></div>
+                  <div className="spinner animate-spinner"></div>
                 </div>
               )}
 

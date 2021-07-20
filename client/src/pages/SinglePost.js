@@ -131,7 +131,7 @@ const SinglePost = (props) => {
       .sort((a, b) => (b.voteCount > a.voteCount ? 1 : -1));
   }
 
-  if (userLoading) {
+  if (postLoading || userLoading) {
     return <Loader mainLoader={true} />;
   }
 
@@ -154,7 +154,7 @@ const SinglePost = (props) => {
                 />
               ) : (
                 <div className="mx-20 my-14">
-                  <div className="spinner"></div>
+                  <div className="spinner animate-spinner"></div>
                 </div>
               )}
               <h3 className="mt-2 mx-0 text-2xl">

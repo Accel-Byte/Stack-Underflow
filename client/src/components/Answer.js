@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, Grid } from 'semantic-ui-react';
 import moment from 'moment';
 
 import VoteButton from '../components/Button/voteButton';

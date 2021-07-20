@@ -4,7 +4,6 @@ import { gql } from '@apollo/client';
 import moment from 'moment';
 
 import DeleteButton from '../components/DeleteButton';
-import MyPopup from '../utils/MyPopup';
 import CreateComment from '../components/comment/createComment';
 import ShowComment from '../components/comment/showComment';
 
