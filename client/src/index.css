@@ -5,65 +5,73 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base{
-  ::-webkit-scrollbar {
-    width: 5px;
+@layer base {
+  :root::-webkit-file-upload-button {
+
+    color: #D1D5DB !important;
+    background-color: #252836 !important;
+    margin-inline-start: -1rem !important;
+    margin-inline-end: 1rem !important;
   }
-  ::-webkit-scrollbar-thumb{
-    background-color: #374151;
+
+  body::-webkit-scrollbar {
+    width: 5px !important;
+  }
+
+  body::-webkit-scrollbar-thumb {
+    background-color: #374151 !important;
     border-radius: 10px;
   }
-  ::-webkit-scrollbar-track{
-    background: #1F1D2B;
+
+  body::-webkit-scrollbar-track {
+    background: #1F1D2B !important;
   }
+
   ::file-selector-button {
-    @apply text-gray-300 bg-card-dark hover:bg-gray-700
-      font-medium text-sm cursor-pointer
-      border-0 border-r border-solid border-gray-900
-      py-2.5 pl-8 pr-4 focus:outline-none;
-    margin-inline-start: -1rem;
-    margin-inline-end: 1rem;
+    color: #D1D5DB !important;
+    background-color: #252836 !important;
+    margin-inline-start: -1rem !important;
+    margin-inline-end: 1rem !important;
   }
-  ::-webkit-file-upload-button {
-    @apply text-gray-300 bg-card-dark hover:bg-gray-700
-      font-medium text-sm cursor-pointer
-      border-0 border-r border-solid border-gray-900
-      py-2.5 pl-8 pr-4 focus:outline-none;
-    margin-inline-start: -1rem;
-    margin-inline-end: 1rem;
-  }
+
   
   ::selection {
     background: #80CBC4;
     color: black;
   }
-  .nav-item-border{
+
+  .nav-item-border {
     position: relative;
     transition: all 200ms linear;
   }
-  
-  .nav-item-border:hover:after{
+
+  .nav-item-border:hover:after {
     bottom: 0;
     opacity: 1;
   }
-  .scroll-1{
+
+  .scroll-1 {
     scrollbar-color: #2d4059;
     scrollbar-width: thin;
   }
+
   .scroll-1::-webkit-scrollbar {
     width: 14px;
   }
-  .scroll-1::-webkit-scrollbar-thumb{
+
+  .scroll-1::-webkit-scrollbar-thumb {
     background-color: #2d4059;
     background-clip: padding-box;
     border: 4px solid #1F1D2B;
     border-radius: 10px;
   }
-  .scroll-1::-webkit-scrollbar-track{
+
+  .scroll-1::-webkit-scrollbar-track {
     border-radius: 10px;
     background: #1F1D2B;
   }
-  .nav-item-border:after{
+
+  .nav-item-border:after {
     position: absolute;
     bottom: -5px;
     left: 0;
@@ -74,17 +82,18 @@
     opacity: 0;
     transition: all 200ms linear;
   }
-  .spinner{
+
+  .spinner {
     height: 2em;
     width: 2em;
     margin: 0 1.5rem;
     border: 6px solid rgba(0, 174, 239, 0.2);
     border-top-color: rgba(0, 174, 239, 0.8);
     border-radius: 50%;
-    animation: rotation 0.6s infinite linear;
   }
+
   @media (prefers-color-scheme: dark) {
-    .nav-item-border:after{
+    .nav-item-border:after {
       position: absolute;
       bottom: -5px;
       left: 0;
