@@ -49,5 +49,6 @@
   { "id": 48, "name": "OpenCV", "color": "text-red-400" },
   { "id": 49, "name": "Dart", "color": "text-blue-400" },
   { "id": 50, "name": "Scss", "color": "text-pink-500" },
-  { "id": 51, "name": "Express", "color": "text-green-400" }
+  { "id": 51, "name": "Express", "color": "text-green-400" },
+  { "id": 52, "name": "GridFS", "color": "text-yellow-300" }
 ]

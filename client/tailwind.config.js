@@ -1,5 +1,10 @@
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  purge: {
+    content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+    options: {
+      safelist: [/^text-/,  'py-2.5',  'pl-8', 'pr-4', 'border-0', 'border-r', 'border-solid', 'border-gray-900'],
+    },
+  },
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     boxShadow: {
@@ -26,14 +31,16 @@ module.exports = {
         'profile-tag-background-dark': '#FEBB0B',
         'profile-button-dark': '#03BFCB',
 
-        'comment-dark': '#343A40'
+        'comment-dark': '#343A40',
       },
       animation: {
         bounce200: 'bounce 10ms infinite 200ms',
         bounce400: 'bounce 10ms infinite 400ms',
-        bounce1: 'bounceDelay 1.4s ease-in-out -.32s both',
-        bounce2: 'bounceDelay 1.4s ease-in-out -.16s both',
-        bounce3: 'bounceDelay 1.4s ease-in-out  both',
+        bounce1: 'bounceDelay 1.4s ease-in-out -.32s both infinite',
+        bounce2: 'bounceDelay 1.4s ease-in-out -.16s both infinite',
+        bounce3: 'bounceDelay 1.4s ease-in-out  both infinite',
+        spinner: 'rotation 0.6s infinite linear',
+        updateImageLoading: 'spinner 1.5s linear infinite'
       },
       keyframes: {
         bounceDelay: {
