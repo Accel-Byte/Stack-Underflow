@@ -11,7 +11,7 @@ let httpLink = createUploadLink({
 });
 
 const wsLink = new WebSocketLink({
-  uri: 'ws://stack-underflow-app.herokuapp.com/subscriptions',
+  uri: 'wss://stack-underflow-app.herokuapp.com/subscriptions',
   options: {
     reconnect: true
   }
