@@ -18,6 +18,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CreatePost from './pages/createPost';
 import SinglePost from './pages/SinglePost';
+import NotFound from './components/404';
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
               <TransitionGroup>
                 <CSSTransition
                   key={location.key}
-                  timeout={200}
+                  timeout={100}
                   classNames="fade"
                 >
                   <Switch location={location}>
@@ -40,6 +41,7 @@ function App() {
                     <Route exact path="/createPost" component={CreatePost} />
                     <Route exact path="/posts/:postId" component={SinglePost} />
                     <Route exact path="/dashboard/:userId" component={Dashboard} />
+                    <Route path="*" component={NotFound} />
                   </Switch>
                 </CSSTransition>
               </TransitionGroup>

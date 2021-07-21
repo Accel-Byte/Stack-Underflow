@@ -94,10 +94,17 @@ module.exports = {
             return result;
             
           } else {
-            throw new Error('Post not found');
+            throw new ApolloError(
+              'Post not found please check again',
+              'POST_NOT_FOUND'
+            );
           }
         } else {
-          throw new Error('UserNotFound');
+          
+          throw new ApolloError(
+            "User doesn't exist check authentication",
+            'USER_NOT_FOUND'
+          );
         }
       } catch (err) {
         throw err;

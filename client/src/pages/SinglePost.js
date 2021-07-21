@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import moment from 'moment';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { AuthContext } from '../context/auth';
@@ -9,8 +8,8 @@ import VoteButton from '../components/Button/voteButton';
 import Editor from '../components/Editor/Editor';
 import Answer from '../components/Answer';
 import Question from '../components/Question';
-import NothingHere from '../components/NothingHere/NothingHere';
 import Loader from '../components/Loader/Loader';
+import NotFound from '../components/404';
 
 const SinglePost = (props) => {
   const postId = props.match.params.postId;
@@ -31,8 +30,8 @@ const SinglePost = (props) => {
         setPostDoesNotExist(true);
       }
     },
-    onError: (error) => {
-      if (error.message === 'PostNotFound') {
+    onError: (errors) => {
+      if (errors.graphQLErrors[0].extensions.code === 'POST_NOT_FOUND') {
         setPostDoesNotExist(true);
       }
     },
@@ -137,7 +136,9 @@ const SinglePost = (props) => {
 
   let circleCommonClasses = 'h-3 w-3 bg-card-dark rounded-full';
 
-  return (
+  return postDoesNotExist ? (
+    <NotFound />
+  ) : postLoading ? (
     <>
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500 font-poppins">
         <div className="grid grid-cols-7 gap-x-14">
@@ -245,7 +246,7 @@ const SinglePost = (props) => {
         </div>
       </div>
     </>
-  );
+  ) : null;
 };
 
 export default SinglePost;

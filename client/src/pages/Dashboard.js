@@ -8,10 +8,10 @@ import PostCard from '../components/PostCard/HomeCard';
 import Pagination from '../components/Pagination/Pagination';
 import Loader from '../components/Loader/Loader';
 import UpdateImage from '../components/UpdateImage';
+import NotFound from '../components/404';
 
 const Dashboard = (props) => {
   const userId = props.match.params.userId;
-  const [open, setOpen] = useState(false);
   const [userNotFound, setUserNotFound] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const notInitialRender = useRef(false);
@@ -33,12 +33,11 @@ const Dashboard = (props) => {
     },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
-    onError: (err) => {
-      console.log(err.message);
-      if (err.message.includes('UserNotFound')) {
+    onError: (errors) => {
+      if (errors.graphQLErrors[0].extensions.code === 'USER_NOT_FOUND') {
         setUserNotFound(true);
       } else {
-        toast.error(err.message, {
+        toast.error(errors.graphQLErrors[0].message, {
           position: 'top-right',
           autoClose: 5000,
           hideProgressBar: false,
@@ -58,7 +57,7 @@ const Dashboard = (props) => {
       notInitialRender.current = true;
     }
     return () => {};
-  }, [currentPage]);
+  }, [currentPage, refetch]);
 
   const { data: { getImage: image } = {}, loading: imageLoading } = useQuery(
     FETCH_IMAGE_QUERY,
@@ -85,8 +84,11 @@ const Dashboard = (props) => {
     return <Loader mainLoader={true} />;
   }
 
-  return (
+  return userNotFound ? (
+    <NotFound />
+  ) : (
     <>
+      <ToastContainer />
       <div className="dark:bg-primary-light bg-gray-100 p-10 pt-24 min-h-screen transition duration-500">
         <div className="grid grid-cols-7 gap-4">
           <div className="col-span-2 justify-self-center h-37rem overflow-y-scroll scroll-1 font-poppins">
