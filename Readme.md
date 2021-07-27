@@ -61,7 +61,6 @@ cd server
 npm install
 npm run serve
 ```
-### Make sure to start Docker Desktop before the command npm start. 
 
 🎉 And that's it! You will now be able to visit <a href="http://localhost:3000/">http://localhost:3000/</a> URL and see your application up and running.
 
