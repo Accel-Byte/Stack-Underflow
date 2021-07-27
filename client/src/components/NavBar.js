@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 
 import { AuthContext } from '../context/auth';
 import useDarkMode from '../utils/useDarkMode';
@@ -7,7 +8,6 @@ import useDarkMode from '../utils/useDarkMode';
 const NavBar = () => {
   const { user, logout } = useContext(AuthContext);
   const [colorTheme, setTheme] = useDarkMode();
-
   const pathname = window.location.pathname;
 
   const path = pathname === '/' ? 'home' : pathname.substr(1);
@@ -19,6 +19,7 @@ const NavBar = () => {
 
   const navBar = (
     <>
+    <ToastContainer/>
       <nav className="fixed w-screen text-primary-light dark:text-white shadow-nav-shadow font-medium font-poppins bg-white dark:bg-primary-light z-50 transition duration-500">
         <div className="md:flex md:justify-between px-16">
           <div className="py-2 md:py-4 px-4 text-center">
@@ -83,7 +84,19 @@ const NavBar = () => {
               <button className="focus:outline-none">
                 <div
                   className="py-2"
-                  onClick={() => setTheme(colorTheme)}
+                  onClick={() => {
+                    colorTheme === 'light' &&
+                      toast.warn('Light Mode is currently in development', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      });
+                    setTheme(colorTheme);
+                  }}
                   name="mode"
                 >
                   {colorTheme === 'dark' ? (
