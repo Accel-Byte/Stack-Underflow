@@ -24,7 +24,16 @@
 + Node.js
 
 ## Env Variables
-
+Edit a .env file in client folder
+```
+REACT_APP_BACKEND_URL = "your backend url"
+REACT_APP_WEBSOCKET = "your backend websocket"
+```
+For Example
+```
+REACT_APP_BACKEND_URL = "http://localhost:5000"
+REACT_APP_WEBSOCKET = "ws://localhost:5000"
+```
 Create a config.js file in server folder and add the following
 ### Make Sure to connect to gmail api at google developer console
 ```
@@ -39,7 +48,6 @@ module.exports = {
     REDIRECT_URI = https://developers.google.com/oauthplayground
     REFRESH_TOKEN = your refresh token
 };
-
 ```
 
 ## Setup Locally
