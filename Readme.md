@@ -1,5 +1,27 @@
 # Stack Underflow
 > #### Question Answering site based on Node and React (MERNG Stack). [[Demo]](https://serene-yonath-36895b.netlify.app/)
+
+## Snapshots
+### HomePage
+  ![HomePage](https://github.com/Accel-Byte/Stack-Underflow/blob/main/Images/HomePage.png?raw=true)
+  <br />
+
+### Dashboard
+  ![Dashboard](https://github.com/Accel-Byte/Stack-Underflow/blob/main/Images/Dashboard.png?raw=true)
+  <br />
+ 
+### UploadImage
+  ![UploadImage](https://github.com/Accel-Byte/Stack-Underflow/blob/main/Images/UploadImage.png?raw=true)
+  <br />
+
+### Register
+  ![Register](https://github.com/Accel-Byte/Stack-Underflow/blob/main/Images/SignUp.png?raw=true)
+  <br />
+  
+### SinglePost
+  ![SinglePost](https://github.com/Accel-Byte/Stack-Underflow/blob/main/Images/SinglePost(1).png?raw=true)
+  <br />
+
 ## Features
 - [x] Authentication and Authorization (includes Email verification)
 - [x] Create Question
